@@ -86,7 +86,7 @@
 
 <div class="header">
   <div style="display:flex;align-items:center;gap:14px;">
-    <span class="hamburger">â°</span>
+    <span class="hamburger">☰</span>
     <svg width="160" height="40" viewBox="0 0 160 40" xmlns="http://www.w3.org/2000/svg">
       <rect x="4" y="8" width="24" height="24" rx="4" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
       <text x="16" y="24" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="white">C1S</text>
@@ -95,9 +95,9 @@
     </svg>
   </div>
   <div class="header-right">
-    <span>Creative One Securities â¾</span>
+    <span>Creative One Securities ▾</span>
     <span style="margin:0 4px;opacity:0.4;">|</span>
-    <span>User â¾</span>
+    <span>User ▾</span>
   </div>
 </div>
 
@@ -118,14 +118,14 @@
           <button class="btn-green" id="btn-adv"  onclick="selectRel('adv')">Advisory</button>
         </div>
       </div>
-      <div class="arrow-col" id="arrow1" style="opacity:0.25"><div class="arrow-btn">âº</div></div>
+      <div class="arrow-col" id="arrow1" style="opacity:0.25"><div class="arrow-btn">›</div></div>
       <div class="step-group">
         <div class="step-label" id="step2-label">Transaction Type</div>
         <div class="step-buttons" id="product-buttons">
           <span style="font-size:12px;color:#a0aec0;padding-top:8px;">Select relationship type first</span>
         </div>
       </div>
-      <div class="arrow-col" id="arrow2" style="opacity:0.25"><div class="arrow-btn">âº</div></div>
+      <div class="arrow-col" id="arrow2" style="opacity:0.25"><div class="arrow-btn">›</div></div>
       <div class="step-group">
         <div class="step-label">Details</div>
         <div id="step3-content" style="font-size:12px;color:#a0aec0;padding-top:8px;">Select transaction type first</div>
@@ -136,7 +136,7 @@
     <div id="index-section" class="index-section hidden">
       <div class="index-title">Additional Information</div>
 
-      <!-- Q1: Funding Type â all NAO -->
+      <!-- Q1: Funding Type — all NAO -->
       <div class="index-row">
         <span class="index-q">What is the funding type?</span>
         <div class="index-opts" id="opts-funding">
@@ -147,7 +147,7 @@
         </div>
       </div>
 
-      <!-- Q2: Retirement Rollover â all NAO -->
+      <!-- Q2: Retirement Rollover — all NAO -->
       <div class="index-row">
         <span class="index-q">Is this transaction a retirement-to-retirement rollover or transfer?</span>
         <div class="index-opts" id="opts-rollover">
@@ -156,7 +156,7 @@
         </div>
       </div>
 
-      <!-- Q3: Mutual Fund Switch â only for Mutual Fund, 529 Plan, Brokerage -->
+      <!-- Q3: Mutual Fund Switch — only for Mutual Fund, 529 Plan, Brokerage -->
       <div class="index-row hidden" id="row-mfswitch">
         <span class="index-q">Will this transaction include a mutual fund switch?</span>
         <div class="index-opts" id="opts-mfswitch">
@@ -167,19 +167,19 @@
     </div>
 
     <div id="result-section" class="result-card hidden"></div>
-    <span class="reset-link" onclick="resetWizard()">âº Start over</span>
+    <span class="reset-link" onclick="resetWizard()">↺ Start over</span>
   </div>
 </div>
 
 <script>
-// âââ STATE âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── STATE ───────────────────────────────────────────────────────────────────
 let state = { rel: null, product: null, wfid: null, indexAnswers: { funding: null, rollover: 'No', mfswitch: null } };
 let wfType = 'nao';
 
 // Products that show mutual fund switch question
 const MF_SWITCH_PRODUCTS = ['Mutual Fund', '529 Plan', 'Brokerage'];
 
-// âââ PRODUCTS ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── PRODUCTS ────────────────────────────────────────────────────────────────
 const naoProducts = {
   brok: [
     { id:'brok-standard',   label:'Outside Custodian' },
@@ -245,7 +245,7 @@ const maintProducts = [
   { id:'maint-bo-only',    label:'Outside RIA' },
 ];
 
-// âââ STAGE CONSTANTS ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── STAGE CONSTANTS ──────────────────────────────────────────────────────────
 const ST  = { label:'Started',                    cls:'stage-started'    };
 const IR  = { label:'Initial Review',             cls:'stage-initrev'    };
 const SIG = { label:'For-Signature',              cls:'stage-sig'        };
@@ -257,7 +257,7 @@ const PP  = { label:'Post Processing',            cls:'stage-processing' };
 const PFQ = { label:'Pre-Final QA',               cls:'stage-prefinal'   };
 const FIN = { label:'Finalized',                  cls:'stage-final'      };
 
-// âââ ASSIGNMENTS âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── ASSIGNMENTS ─────────────────────────────────────────────────────────────
 const AA_ST  = { stage:'Started',                    assigned:'WF Creator',             tag:'tag-owner' };
 const AA_IR  = { stage:'Initial Review',             assigned:'Auto-assigned (site)',    tag:'tag-auto'  };
 const AA_SIG = { stage:'For-Signature',              assigned:'WF Owner',               tag:'tag-owner' };
@@ -278,71 +278,71 @@ const TRADE_ASSIGNS   = [AA_ST, AA_IR, AA_SIG, AA_SGN, AA_BOR, AA_PR1, AA_ESC];
 const MAINT_SHORT     = [ST, BOR, FIN];
 const MAINT_SHORT_A   = [AA_ST, AA_BOR];
 
-// âââ WORKFLOW DEFINITIONS âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── WORKFLOW DEFINITIONS ─────────────────────────────────────────────────────
 const workflows = {
   'brok-standard': {
-    name: 'Standard NAO â Brokerage',
+    name: 'Standard NAO — Brokerage',
     stages: STD_STAGES, assignments: STD_ASSIGNS,
     note: 'At Principal Review: back office can escalate to Level 2 approver or proceed directly to Post Processing. Escalation is optional.',
   },
   'brok-mf': {
-    name: 'Standard NAO â Mutual Fund',
+    name: 'Standard NAO — Mutual Fund',
     stages: STD_STAGES, assignments: STD_ASSIGNS,
     note: 'At Principal Review: back office can escalate to Level 2 approver or proceed directly to Post Processing. Mutual fund switch question applies.',
   },
   'brok-529': {
-    name: 'NAO â 529 Plan',
+    name: 'NAO — 529 Plan',
     stages: STD_STAGES, assignments: STD_ASSIGNS,
     note: 'At Principal Review: back office can escalate to Level 2 approver or proceed directly to Post Processing. Mutual fund switch question applies.',
   },
   'brok-brokerage': {
-    name: 'NAO â Brokerage Account',
+    name: 'NAO — Brokerage Account',
     stages: STD_STAGES, assignments: STD_ASSIGNS,
     note: 'At Principal Review: back office can escalate to Level 2 approver or proceed directly to Post Processing. Mutual fund switch question applies.',
   },
   'brok-escalation': {
-    name: 'NAO â Variable Annuity',
+    name: 'NAO — Variable Annuity',
     stages: STD_STAGES, assignments: STD_ASSIGNS,
     note: 'At Principal Review: back office can escalate to Level 2 approver or proceed directly to Post Processing.',
   },
   'brok-tradeaway': {
-    name: 'NAO â Trade Away',
+    name: 'NAO — Trade Away',
     stages: TRADE_STAGES, assignments: TRADE_ASSIGNS,
     note: 'Skips Post Processing and Pre-Final QA. At Principal Review: can escalate to Level 2 or finalize directly.',
   },
   'adv-standard': {
-    name: 'Standard NAO â Advisory',
+    name: 'Standard NAO — Advisory',
     stages: STD_STAGES, assignments: STD_ASSIGNS,
     note: 'At Principal Review: back office can escalate to Level 2 approver or proceed directly to Post Processing.',
   },
   'adv-escalation': {
-    name: 'NAO â Advisory Annuity / Advisory Brokerage',
+    name: 'NAO — Advisory Annuity / Advisory Brokerage',
     stages: STD_STAGES, assignments: STD_ASSIGNS,
     note: 'At Principal Review: back office can escalate to Level 2 approver or proceed directly to Post Processing.',
   },
   'adv-finplan': {
-    name: 'NAO â Financial Planning',
+    name: 'NAO — Financial Planning',
     stages: FINPLAN_STAGES, assignments: FINPLAN_ASSIGNS,
     note: 'Skips Post Processing. At Principal Review: can escalate to Level 2 or proceed directly to Pre-Final QA.',
   },
   'maint-full': {
-    name: 'Full Maintenance â Review + Post Processing',
+    name: 'Full Maintenance — Review + Post Processing',
     stages: STD_STAGES, assignments: STD_ASSIGNS,
     note: 'After Principal Review, back office routes to escalation or Post Processing. Post Processing then Pre-Final QA before Finalize.',
   },
   'maint-short': {
-    name: 'Short Maintenance â Meeting Notes',
+    name: 'Short Maintenance — Meeting Notes',
     stages: MAINT_SHORT, assignments: MAINT_SHORT_A,
     note: 'No signature stage, no approval, no processing. Back Office Review then Finalize.',
   },
   'maint-bo-only': {
-    name: 'Maintenance â BO-Only Review Path (Outside RIA)',
+    name: 'Maintenance — BO-Only Review Path (Outside RIA)',
     stages: MAINT_SHORT, assignments: MAINT_SHORT_A,
     note: 'Back office review only then finalize. No approval or processing stages.',
   },
 };
 
-// âââ INDEX QUESTION HANDLING ââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── INDEX QUESTION HANDLING ──────────────────────────────────────────────────
 function selectIdx(field, value) {
   state.indexAnswers[field] = value;
   // Update button styles
@@ -352,7 +352,7 @@ function selectIdx(field, value) {
   });
 }
 
-// âââ SWITCH WORKFLOW TYPE âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── SWITCH WORKFLOW TYPE ─────────────────────────────────────────────────────
 function switchType(type) {
   wfType = type;
   resetWizard();
@@ -395,7 +395,7 @@ function switchType(type) {
   }
 }
 
-// âââ STEP 1 âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── STEP 1 ───────────────────────────────────────────────────────────────────
 function selectRel(rel) {
   state = { rel, product: null, wfid: null, indexAnswers: { funding: null, rollover: 'No', mfswitch: null } };
   ['brok','adv'].forEach(r => {
@@ -419,7 +419,7 @@ function selectRel(rel) {
   });
 }
 
-// âââ STEP 2 âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── STEP 2 ───────────────────────────────────────────────────────────────────
 function selectProduct(prodId, prodLabel, clickedBtn) {
   state.product = prodId;
   state.wfid = prodId;
@@ -429,7 +429,7 @@ function selectProduct(prodId, prodLabel, clickedBtn) {
     btn.className = 'btn-blue' + (btn === clickedBtn ? ' active' : ' inactive');
   });
   document.getElementById('arrow2').style.opacity = '1';
-  document.getElementById('step3-content').innerHTML = '<span style="font-size:12px;color:#27ae60;font-weight:600;">Answer questions below â</span>';
+  document.getElementById('step3-content').innerHTML = '<span style="font-size:12px;color:#27ae60;font-weight:600;">Answer questions below ↓</span>';
 
   // Show/hide mutual fund switch question
   const showMF = MF_SWITCH_PRODUCTS.includes(prodLabel);
@@ -445,7 +445,7 @@ function selectProduct(prodId, prodLabel, clickedBtn) {
   renderResult();
 }
 
-// âââ RENDER RESULT ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── RENDER RESULT ────────────────────────────────────────────────────────────
 function renderResult() {
   const wf = workflows[state.product];
   if (!wf) return;
@@ -453,7 +453,7 @@ function renderResult() {
   const section = document.getElementById('result-section');
   section.classList.remove('hidden');
 
-  // Build stage path â show branch at Principal Review
+  // Build stage path — show branch at Principal Review
   let stageHTML = '';
   const stages = wf.stages;
   const pr1Idx = stages.findIndex(s => s.label === 'Approval: Principal Review');
@@ -464,7 +464,7 @@ function renderResult() {
     // Pre-branch stages
     stageHTML += '<div class="stage-row">';
     for (let i = 0; i <= pr1Idx; i++) {
-      if (i > 0) stageHTML += '<span class="stage-arrow">â</span>';
+      if (i > 0) stageHTML += '<span class="stage-arrow">→</span>';
       stageHTML += `<button class="stage-btn ${stages[i].cls}">${stages[i].label}</button>`;
     }
     stageHTML += '</div>';
@@ -473,13 +473,13 @@ function renderResult() {
     stageHTML += `<div class="branch-diagram">
       <div class="branch-path branch-escalation">
         <span class="branch-arrow-label">optional escalation</span>
-        <span class="stage-arrow">â</span>
+        <span class="stage-arrow">→</span>
         <button class="stage-btn ${stages[escIdx].cls}">${stages[escIdx].label}</button>
-        <span class="stage-arrow">â</span>
+        <span class="stage-arrow">↓</span>
       </div>
       <div class="branch-path branch-direct">
         <span class="branch-arrow-label">or directly</span>
-        <span class="stage-arrow">â</span>
+        <span class="stage-arrow">→</span>
         <button class="stage-btn ${stages[ppIdx].cls}">${stages[ppIdx].label}</button>
       </div>
     </div>`;
@@ -488,15 +488,15 @@ function renderResult() {
     stageHTML += '<div class="stage-row" style="margin-top:8px;">';
     stageHTML += `<button class="stage-btn ${stages[ppIdx].cls}">${stages[ppIdx].label}</button>`;
     for (let i = ppIdx + 1; i < stages.length; i++) {
-      stageHTML += '<span class="stage-arrow">â</span>';
+      stageHTML += '<span class="stage-arrow">→</span>';
       stageHTML += `<button class="stage-btn ${stages[i].cls}">${stages[i].label}</button>`;
     }
     stageHTML += '</div>';
   } else {
-    // No branch â linear path
+    // No branch — linear path
     stageHTML += '<div class="stage-row">';
     stages.forEach((s, i) => {
-      if (i > 0) stageHTML += '<span class="stage-arrow">â</span>';
+      if (i > 0) stageHTML += '<span class="stage-arrow">→</span>';
       stageHTML += `<button class="stage-btn ${s.cls}">${s.label}</button>`;
     });
     stageHTML += '</div>';
@@ -530,7 +530,7 @@ function renderResult() {
   `;
 }
 
-// âââ RESET ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// ─── RESET ────────────────────────────────────────────────────────────────────
 function resetWizard() {
   state = { rel: null, product: null, wfid: null, indexAnswers: { funding: null, rollover: 'No', mfswitch: null } };
   ['brok','adv'].forEach(r => { const b = document.getElementById('btn-'+r); if(b) b.className='btn-green'; });
