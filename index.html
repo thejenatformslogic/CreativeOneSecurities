@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Account Workflow</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; color: #333; min-height: 100vh; }
+  .header { background: linear-gradient(135deg, #4a5a6b 0%, #3a4a5a 100%); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+  .header-right { display: flex; align-items: center; gap: 8px; color: #cfd8dc; font-size: 13px; }
+  .hamburger { font-size: 20px; color: white; cursor: pointer; margin-right: 8px; }
+  .main { max-width: 1100px; margin: 0 auto; padding: 32px 24px 60px; }
+  .page-title { font-size: 22px; font-weight: 600; color: #2d3748; margin-bottom: 6px; }
+  .page-sub { font-size: 14px; color: #718096; margin-bottom: 32px; }
+  .wf-toggle { display: flex; gap: 8px; margin-bottom: 20px; }
+  .btn-toggle { padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; border: 2px solid #1a2540; transition: all 0.15s; background: white; color: #1a2540; }
+  .btn-toggle.active { background: #1a2540; color: white; }
+  .btn-toggle:hover:not(.active) { background: #eef2f8; }
+  .wizard-card { background: white; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); padding: 28px 32px; margin-bottom: 24px; }
+  .step-flow { display: flex; align-items: flex-start; gap: 0; flex-wrap: wrap; min-height: 60px; }
+  .step-group { display: flex; flex-direction: column; gap: 8px; }
+  .step-label { font-size: 11px; font-weight: 600; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .step-buttons { display: flex; flex-direction: column; gap: 7px; }
+  .arrow-col { display: flex; align-items: center; padding: 0 10px; padding-top: 26px; }
+  .arrow-btn { width: 32px; height: 32px; border-radius: 4px; background: #4a90d9; border: none; color: white; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+  .btn-green { background: #5cb85c; color: white; border: none; border-radius: 4px; padding: 10px 18px; font-size: 13px; font-weight: 600; cursor: pointer; min-width: 130px; text-align: center; transition: background 0.15s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+  .btn-green:hover { background: #4cae4c; }
+  .btn-green.active { background: #3d8b3d; box-shadow: 0 0 0 3px rgba(92,184,92,0.35); }
+  .btn-green.inactive { opacity: 0.45; cursor: default; }
+  .btn-blue { background: #4a90d9; color: white; border: none; border-radius: 4px; padding: 10px 18px; font-size: 13px; font-weight: 500; cursor: pointer; min-width: 200px; text-align: center; transition: background 0.15s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+  .btn-blue:hover { background: #357abd; }
+  .btn-blue.active { background: #2568a8; box-shadow: 0 0 0 3px rgba(74,144,217,0.35); }
+  .btn-blue.inactive { opacity: 0.45; cursor: default; }
+  .maint-select { width: 100%; max-width: 500px; padding: 10px 14px; font-size: 13px; border: 1px solid #cbd5e0; border-radius: 6px; background: white; color: #2d3748; cursor: pointer; }
+  /* Index questions */
+  .index-section { margin-top: 24px; padding-top: 20px; border-top: 1px solid #e2e8f0; animation: fadeIn 0.25s ease; }
+  .index-title { font-size: 13px; font-weight: 600; color: #4a5568; margin-bottom: 14px; }
+  .index-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+  .index-q { font-size: 13px; color: #4a5568; font-weight: 500; min-width: 380px; }
+  .index-opts { display: flex; gap: 7px; flex-wrap: wrap; }
+  .btn-idx { background: #edf2f7; color: #4a5568; border: 1px solid #cbd5e0; border-radius: 4px; padding: 6px 14px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
+  .btn-idx:hover { background: #e2e8f0; }
+  .btn-idx.active { background: #4a90d9; color: white; border-color: #4a90d9; }
+  /* Result */
+  .result-card { margin-top: 24px; padding-top: 20px; border-top: 1px solid #e2e8f0; animation: fadeIn 0.3s ease; }
+  .result-title { font-size: 16px; font-weight: 700; color: #1a2540; margin-bottom: 12px; }
+  .result-note { font-size: 12px; color: #718096; margin-bottom: 14px; padding: 8px 12px; background: #f7fafc; border-radius: 4px; border-left: 3px solid #4a90d9; }
+  .result-section-label { font-size: 11px; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; margin-top: 16px; }
+  .stage-row { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+  .stage-btn { padding: 6px 12px; border-radius: 3px; font-size: 11px; font-weight: 600; border: none; cursor: default; white-space: nowrap; }
+  .stage-started    { background: #718096; color: white; }
+  .stage-initrev    { background: #a78bfa; color: white; }
+  .stage-sig        { background: #9b59b6; color: white; }
+  .stage-review     { background: #4a90d9; color: white; }
+  .stage-approval   { background: #e67e22; color: white; }
+  .stage-escalation { background: #c0392b; color: white; }
+  .stage-processing { background: #27ae60; color: white; }
+  .stage-prefinal   { background: #16a085; color: white; }
+  .stage-final      { background: #2c3e50; color: white; }
+  .stage-arrow      { color: #a0aec0; font-size: 12px; }
+  .assign-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 4px; }
+  .assign-table th { text-align: left; padding: 6px 10px; background: #f7fafc; color: #718096; font-weight: 600; font-size: 11px; border-bottom: 1px solid #e2e8f0; }
+  .assign-table td { padding: 6px 10px; border-bottom: 1px solid #edf2f7; color: #4a5568; }
+  .assign-table tr:last-child td { border-bottom: none; }
+  .tag { display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 10px; font-weight: 500; }
+  .tag-bo   { background: #e3f2fd; color: #1565c0; }
+  .tag-fo   { background: #e8f5e9; color: #2e7d32; }
+  .tag-owner{ background: #fff8e1; color: #f57f17; }
+  .tag-auto { background: #fce4ec; color: #c62828; }
+  .tag-ops  { background: #f3e5f5; color: #6a1b9a; }
+  .index-answers { margin-top: 16px; padding: 10px 14px; background: #f7fafc; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 12px; color: #4a5568; }
+  .index-answers strong { color: #1a2540; }
+  .reset-link { font-size: 12px; color: #a0aec0; cursor: pointer; text-decoration: underline; margin-top: 16px; display: inline-block; }
+  .reset-link:hover { color: #718096; }
+  .hidden { display: none !important; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Branch diagram */
+  .branch-diagram { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 0 24px; padding: 10px 16px; border-left: 3px solid #e67e22; background: #fef9f5; border-radius: 0 6px 6px 0; }
+  .branch-path { display: flex; align-items: center; gap: 6px; }
+  .branch-arrow-label { font-size: 11px; color: #a0aec0; font-style: italic; min-width: 110px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="display:flex;align-items:center;gap:14px;">
+    <span class="hamburger">â°</span>
+    <svg width="160" height="40" viewBox="0 0 160 40" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="8" width="24" height="24" rx="4" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+      <text x="16" y="24" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="white">C1S</text>
+      <rect x="40" y="14" width="80" height="6" rx="2" fill="rgba(255,255,255,0.7)"/>
+      <rect x="40" y="25" width="56" height="4" rx="2" fill="rgba(255,255,255,0.35)"/>
+    </svg>
+  </div>
+  <div class="header-right">
+    <span>Creative One Securities â¾</span>
+    <span style="margin:0 4px;opacity:0.4;">|</span>
+    <span>User â¾</span>
+  </div>
+</div>
+
+<div class="main">
+  <div class="wf-toggle">
+    <button class="btn-toggle active" id="toggle-nao"   onclick="switchType('nao')">New Account Workflow</button>
+    <button class="btn-toggle"        id="toggle-maint" onclick="switchType('maint')">Maintenance Workflow</button>
+  </div>
+  <div class="page-title" id="page-title">New Account Workflow</div>
+  <div class="page-sub">Select the relationship type and transaction to begin.</div>
+
+  <div class="wizard-card">
+    <div class="step-flow">
+      <div class="step-group" id="rel-group">
+        <div class="step-label">Relationship Type</div>
+        <div class="step-buttons">
+          <button class="btn-green" id="btn-brok" onclick="selectRel('brok')">Brokerage</button>
+          <button class="btn-green" id="btn-adv"  onclick="selectRel('adv')">Advisory</button>
+        </div>
+      </div>
+      <div class="arrow-col" id="arrow1" style="opacity:0.25"><div class="arrow-btn">âº</div></div>
+      <div class="step-group">
+        <div class="step-label" id="step2-label">Transaction Type</div>
+        <div class="step-buttons" id="product-buttons">
+          <span style="font-size:12px;color:#a0aec0;padding-top:8px;">Select relationship type first</span>
+        </div>
+      </div>
+      <div class="arrow-col" id="arrow2" style="opacity:0.25"><div class="arrow-btn">âº</div></div>
+      <div class="step-group">
+        <div class="step-label">Details</div>
+        <div id="step3-content" style="font-size:12px;color:#a0aec0;padding-top:8px;">Select transaction type first</div>
+      </div>
+    </div>
+
+    <!-- Index Questions (NAO only) -->
+    <div id="index-section" class="index-section hidden">
+      <div class="index-title">Additional Information</div>
+
+      <!-- Q1: Funding Type â all NAO -->
+      <div class="index-row">
+        <span class="index-q">What is the funding type?</span>
+        <div class="index-opts" id="opts-funding">
+          <button class="btn-idx" onclick="selectIdx('funding','Transfer')">Transfer</button>
+          <button class="btn-idx" onclick="selectIdx('funding','Check')">Check</button>
+          <button class="btn-idx" onclick="selectIdx('funding','Wire')">Wire</button>
+          <button class="btn-idx" onclick="selectIdx('funding','Other')">Other</button>
+        </div>
+      </div>
+
+      <!-- Q2: Retirement Rollover â all NAO -->
+      <div class="index-row">
+        <span class="index-q">Is this transaction a retirement-to-retirement rollover or transfer?</span>
+        <div class="index-opts" id="opts-rollover">
+          <button class="btn-idx active" onclick="selectIdx('rollover','No')">No</button>
+          <button class="btn-idx" onclick="selectIdx('rollover','Yes')">Yes</button>
+        </div>
+      </div>
+
+      <!-- Q3: Mutual Fund Switch â only for Mutual Fund, 529 Plan, Brokerage -->
+      <div class="index-row hidden" id="row-mfswitch">
+        <span class="index-q">Will this transaction include a mutual fund switch?</span>
+        <div class="index-opts" id="opts-mfswitch">
+          <button class="btn-idx" onclick="selectIdx('mfswitch','Yes')">Yes</button>
+          <button class="btn-idx" onclick="selectIdx('mfswitch','No')">No</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="result-section" class="result-card hidden"></div>
+    <span class="reset-link" onclick="resetWizard()">âº Start over</span>
+  </div>
+</div>
+
+<script>
+// âââ STATE âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+let state = { rel: null, product: null, wfid: null, indexAnswers: { funding: null, rollover: 'No', mfswitch: null } };
+let wfType = 'nao';
+
+// Products that show mutual fund switch question
+const MF_SWITCH_PRODUCTS = ['Mutual Fund', '529 Plan', 'Brokerage'];
+
+// âââ PRODUCTS ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+const naoProducts = {
+  brok: [
+    { id:'brok-standard',   label:'Outside Custodian' },
+    { id:'brok-standard',   label:'Retirement Plan' },
+    { id:'brok-standard',   label:'Alternatives (Direct)' },
+    { id:'brok-mf',         label:'Mutual Fund' },
+    { id:'brok-standard',   label:'Broker/Dealer Change' },
+    { id:'brok-standard',   label:'Variable Universal Life (VUL)' },
+    { id:'brok-standard',   label:'Fixed Index Annuity' },
+    { id:'brok-standard',   label:'RILA / Annuity E-Apps' },
+    { id:'brok-standard',   label:'Other Direct Business' },
+    { id:'brok-escalation', label:'Variable Annuity' },
+    { id:'brok-529',        label:'529 Plan' },
+    { id:'brok-brokerage',  label:'Brokerage' },
+    { id:'brok-tradeaway',  label:'Trade Away' },
+  ],
+  adv: [
+    { id:'adv-standard',    label:'Advisory Retirement Plan' },
+    { id:'adv-standard',    label:'RIA Change' },
+    { id:'adv-standard',    label:'New Business Advisory RIA Direct' },
+    { id:'adv-standard',    label:'Investment Consulting' },
+    { id:'adv-standard',    label:'Separately Managed Account' },
+    { id:'adv-escalation',  label:'Advisory Annuity' },
+    { id:'adv-escalation',  label:'New Business Advisory RIA Brokerage' },
+    { id:'adv-finplan',     label:'Financial Planning' },
+  ],
+};
+
+const maintProducts = [
+  { id:'maint-full',       label:'Account Transfer' },
+  { id:'maint-full',       label:'Account Transfer - Receive' },
+  { id:'maint-full',       label:'Address Change' },
+  { id:'maint-full',       label:'Client Account Form Update' },
+  { id:'maint-full',       label:'Advisory Fee Billing Update' },
+  { id:'maint-full',       label:'Advisory Termination' },
+  { id:'maint-full',       label:'Signature Guarantee' },
+  { id:'maint-full',       label:'529 Plan Subsequent Purchase' },
+  { id:'maint-full',       label:'ACH Banking Instructions - New/Update' },
+  { id:'maint-full',       label:'ACH Ad-Hoc Request' },
+  { id:'maint-full',       label:'Alt Inv Conversion / Distribution Mod / Redemption' },
+  { id:'maint-full',       label:'Annuity Subsequent Purchase' },
+  { id:'maint-full',       label:'Check Deposit' },
+  { id:'maint-full',       label:'Check Request' },
+  { id:'maint-full',       label:'Corporate Actions' },
+  { id:'maint-full',       label:'Disposal of Security with Insignificant Value' },
+  { id:'maint-full',       label:'Fed Wire Request' },
+  { id:'maint-full',       label:'IRA Asset Movement Authorization' },
+  { id:'maint-full',       label:'IRA Beneficiary Distribution Request' },
+  { id:'maint-full',       label:'IRA / ESA Distribution Request' },
+  { id:'maint-full',       label:'Journal Request' },
+  { id:'maint-full',       label:'Mutual Fund Subsequent Purchase' },
+  { id:'maint-full',       label:'Private Transaction' },
+  { id:'maint-full',       label:'Qualified Retirement Plan Distribution Request' },
+  { id:'maint-full',       label:'Returned Mail' },
+  { id:'maint-full',       label:'Roth Conversion' },
+  { id:'maint-full',       label:'Securities Trading Disclosures' },
+  { id:'maint-full',       label:'Security to Non-Security' },
+  { id:'maint-full',       label:'Stock / Bond Certificate' },
+  { id:'maint-full',       label:'Trade Away / Step-Out' },
+  { id:'maint-full',       label:'Other' },
+  { id:'maint-full',       label:'Brokerage Alternative Investment Purchase' },
+  { id:'maint-short',      label:'Meeting Notes' },
+  { id:'maint-bo-only',    label:'Outside RIA' },
+];
+
+// âââ STAGE CONSTANTS ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+const ST  = { label:'Started',                    cls:'stage-started'    };
+const IR  = { label:'Initial Review',             cls:'stage-initrev'    };
+const SIG = { label:'For-Signature',              cls:'stage-sig'        };
+const SGN = { label:'Signed',                     cls:'stage-sig'        };
+const BOR = { label:'Back Office Review',         cls:'stage-review'     };
+const PR1 = { label:'Approval: Principal Review', cls:'stage-approval'   };
+const ESC = { label:'Approval: Escalation',       cls:'stage-escalation' };
+const PP  = { label:'Post Processing',            cls:'stage-processing' };
+const PFQ = { label:'Pre-Final QA',               cls:'stage-prefinal'   };
+const FIN = { label:'Finalized',                  cls:'stage-final'      };
+
+// âââ ASSIGNMENTS âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+const AA_ST  = { stage:'Started',                    assigned:'WF Creator',             tag:'tag-owner' };
+const AA_IR  = { stage:'Initial Review',             assigned:'Auto-assigned (site)',    tag:'tag-auto'  };
+const AA_SIG = { stage:'For-Signature',              assigned:'WF Owner',               tag:'tag-owner' };
+const AA_SGN = { stage:'Signed',                     assigned:'WF Creator',             tag:'tag-owner' };
+const AA_BOR = { stage:'Back Office Review',         assigned:'Operations Team',     tag:'tag-ops'   };
+const AA_PR1 = { stage:'Approval: Principal Review', assigned:'Approval Level 1 Group', tag:'tag-bo'    };
+const AA_ESC = { stage:'Approval: Escalation',       assigned:'Approval Level 2 Group', tag:'tag-bo'    };
+const AA_PP  = { stage:'Post Processing',            assigned:'Operations Team',     tag:'tag-ops'   };
+const AA_PFQ = { stage:'Pre-Final QA',               assigned:'Operations Team',     tag:'tag-ops'   };
+
+// Standard full stage path with escalation available
+const STD_STAGES      = [ST, IR, SIG, SGN, BOR, PR1, ESC, PP, PFQ, FIN];
+const STD_ASSIGNS     = [AA_ST, AA_IR, AA_SIG, AA_SGN, AA_BOR, AA_PR1, AA_ESC, AA_PP, AA_PFQ];
+const FINPLAN_STAGES  = [ST, IR, SIG, SGN, BOR, PR1, ESC, PFQ, FIN];
+const FINPLAN_ASSIGNS = [AA_ST, AA_IR, AA_SIG, AA_SGN, AA_BOR, AA_PR1, AA_ESC, AA_PFQ];
+const TRADE_STAGES    = [ST, IR, SIG, SGN, BOR, PR1, ESC, FIN];
+const TRADE_ASSIGNS   = [AA_ST, AA_IR, AA_SIG, AA_SGN, AA_BOR, AA_PR1, AA_ESC];
+const MAINT_SHORT     = [ST, BOR, FIN];
+const MAINT_SHORT_A   = [AA_ST, AA_BOR];
+
+// âââ WORKFLOW DEFINITIONS âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+const workflows = {
+  'brok-standard': {
+    name: 'Standard NAO â Brokerage',
+    stages: STD_STAGES, assignments: STD_ASSIGNS,
+    note: 'At Principal Review: back office can escalate to Level 2 approver or proceed directly to Post Processing. Escalation is optional.',
+  },
+  'brok-mf': {
+    name: 'Standard NAO â Mutual Fund',
+    stages: STD_STAGES, assignments: STD_ASSIGNS,
+    note: 'At Principal Review: back office can escalate to Level 2 approver or proceed directly to Post Processing. Mutual fund switch question applies.',
+  },
+  'brok-529': {
+    name: 'NAO â 529 Plan',
+    stages: STD_STAGES, assignments: STD_ASSIGNS,
+    note: 'At Principal Review: back office can escalate to Level 2 approver or proceed directly to Post Processing. Mutual fund switch question applies.',
+  },
+  'brok-brokerage': {
+    name: 'NAO â Brokerage Account',
+    stages: STD_STAGES, assignments: STD_ASSIGNS,
+    note: 'At Principal Review: back office can escalate to Level 2 approver or proceed directly to Post Processing. Mutual fund switch question applies.',
+  },
+  'brok-escalation': {
+    name: 'NAO â Variable Annuity',
+    stages: STD_STAGES, assignments: STD_ASSIGNS,
+    note: 'At Principal Review: back office can escalate to Level 2 approver or proceed directly to Post Processing.',
+  },
+  'brok-tradeaway': {
+    name: 'NAO â Trade Away',
+    stages: TRADE_STAGES, assignments: TRADE_ASSIGNS,
+    note: 'Skips Post Processing and Pre-Final QA. At Principal Review: can escalate to Level 2 or finalize directly.',
+  },
+  'adv-standard': {
+    name: 'Standard NAO â Advisory',
+    stages: STD_STAGES, assignments: STD_ASSIGNS,
+    note: 'At Principal Review: back office can escalate to Level 2 approver or proceed directly to Post Processing.',
+  },
+  'adv-escalation': {
+    name: 'NAO â Advisory Annuity / Advisory Brokerage',
+    stages: STD_STAGES, assignments: STD_ASSIGNS,
+    note: 'At Principal Review: back office can escalate to Level 2 approver or proceed directly to Post Processing.',
+  },
+  'adv-finplan': {
+    name: 'NAO â Financial Planning',
+    stages: FINPLAN_STAGES, assignments: FINPLAN_ASSIGNS,
+    note: 'Skips Post Processing. At Principal Review: can escalate to Level 2 or proceed directly to Pre-Final QA.',
+  },
+  'maint-full': {
+    name: 'Full Maintenance â Review + Post Processing',
+    stages: STD_STAGES, assignments: STD_ASSIGNS,
+    note: 'After Principal Review, back office routes to escalation or Post Processing. Post Processing then Pre-Final QA before Finalize.',
+  },
+  'maint-short': {
+    name: 'Short Maintenance â Meeting Notes',
+    stages: MAINT_SHORT, assignments: MAINT_SHORT_A,
+    note: 'No signature stage, no approval, no processing. Back Office Review then Finalize.',
+  },
+  'maint-bo-only': {
+    name: 'Maintenance â BO-Only Review Path (Outside RIA)',
+    stages: MAINT_SHORT, assignments: MAINT_SHORT_A,
+    note: 'Back office review only then finalize. No approval or processing stages.',
+  },
+};
+
+// âââ INDEX QUESTION HANDLING ââââââââââââââââââââââââââââââââââââââââââââââââââ
+function selectIdx(field, value) {
+  state.indexAnswers[field] = value;
+  // Update button styles
+  const map = { funding: 'opts-funding', rollover: 'opts-rollover', mfswitch: 'opts-mfswitch' };
+  document.querySelectorAll(`#${map[field]} .btn-idx`).forEach(btn => {
+    btn.className = 'btn-idx' + (btn.textContent.trim() === value ? ' active' : '');
+  });
+}
+
+// âââ SWITCH WORKFLOW TYPE âââââââââââââââââââââââââââââââââââââââââââââââââââââ
+function switchType(type) {
+  wfType = type;
+  resetWizard();
+  document.getElementById('toggle-nao').className   = 'btn-toggle' + (type==='nao'   ? ' active' : '');
+  document.getElementById('toggle-maint').className = 'btn-toggle' + (type==='maint' ? ' active' : '');
+  document.getElementById('page-title').textContent = type==='nao' ? 'New Account Workflow' : 'Maintenance Workflow';
+
+  const relGroup = document.getElementById('rel-group');
+  const arrow1   = document.getElementById('arrow1');
+
+  if (type === 'maint') {
+    relGroup.style.display = 'none';
+    arrow1.style.display   = 'none';
+    document.getElementById('index-section').classList.add('hidden');
+    const container = document.getElementById('product-buttons');
+    container.innerHTML = '';
+    const sel = document.createElement('select');
+    sel.className = 'maint-select';
+    const def = document.createElement('option');
+    def.value = ''; def.textContent = '-- Select transaction type --';
+    sel.appendChild(def);
+    maintProducts.forEach(prod => {
+      const opt = document.createElement('option');
+      opt.value = prod.id;
+      opt.textContent = prod.label;
+      sel.appendChild(opt);
+    });
+    sel.onchange = () => {
+      if (sel.value) { state.product = sel.value; renderResult(); }
+      else document.getElementById('result-section').classList.add('hidden');
+    };
+    container.appendChild(sel);
+    document.getElementById('arrow2').style.opacity = '1';
+  } else {
+    relGroup.style.display = '';
+    arrow1.style.display   = '';
+    arrow1.style.opacity   = '0.25';
+    document.getElementById('product-buttons').innerHTML = '<span style="font-size:12px;color:#a0aec0;padding-top:8px;">Select relationship type first</span>';
+    document.getElementById('arrow2').style.opacity = '0.25';
+  }
+}
+
+// âââ STEP 1 âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+function selectRel(rel) {
+  state = { rel, product: null, wfid: null, indexAnswers: { funding: null, rollover: 'No', mfswitch: null } };
+  ['brok','adv'].forEach(r => {
+    document.getElementById('btn-'+r).className = 'btn-green' + (r===rel ? ' active' : ' inactive');
+  });
+  document.getElementById('arrow1').style.opacity = '1';
+  document.getElementById('arrow2').style.opacity = '0.25';
+  document.getElementById('result-section').classList.add('hidden');
+  document.getElementById('index-section').classList.add('hidden');
+  document.getElementById('step3-content').innerHTML = '<span style="font-size:12px;color:#a0aec0;padding-top:8px;">Select transaction type first</span>';
+
+  const container = document.getElementById('product-buttons');
+  container.innerHTML = '';
+  (naoProducts[rel] || []).forEach(prod => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-blue';
+    btn.textContent = prod.label;
+    btn.dataset.wfid = prod.id;
+    btn.onclick = () => selectProduct(prod.id, prod.label, btn);
+    container.appendChild(btn);
+  });
+}
+
+// âââ STEP 2 âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+function selectProduct(prodId, prodLabel, clickedBtn) {
+  state.product = prodId;
+  state.wfid = prodId;
+  state.indexAnswers = { funding: null, rollover: 'No', mfswitch: null };
+
+  document.querySelectorAll('.btn-blue').forEach(btn => {
+    btn.className = 'btn-blue' + (btn === clickedBtn ? ' active' : ' inactive');
+  });
+  document.getElementById('arrow2').style.opacity = '1';
+  document.getElementById('step3-content').innerHTML = '<span style="font-size:12px;color:#27ae60;font-weight:600;">Answer questions below â</span>';
+
+  // Show/hide mutual fund switch question
+  const showMF = MF_SWITCH_PRODUCTS.includes(prodLabel);
+  document.getElementById('row-mfswitch').classList.toggle('hidden', !showMF);
+
+  // Reset index question buttons
+  document.querySelectorAll('#opts-funding .btn-idx').forEach(b => b.className = 'btn-idx');
+  document.querySelectorAll('#opts-rollover .btn-idx').forEach((b,i) => b.className = 'btn-idx' + (i===0 ? ' active' : ''));
+  document.querySelectorAll('#opts-mfswitch .btn-idx').forEach(b => b.className = 'btn-idx');
+
+  document.getElementById('index-section').classList.remove('hidden');
+  document.getElementById('result-section').classList.add('hidden');
+  renderResult();
+}
+
+// âââ RENDER RESULT ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+function renderResult() {
+  const wf = workflows[state.product];
+  if (!wf) return;
+
+  const section = document.getElementById('result-section');
+  section.classList.remove('hidden');
+
+  // Build stage path â show branch at Principal Review
+  let stageHTML = '';
+  const stages = wf.stages;
+  const pr1Idx = stages.findIndex(s => s.label === 'Approval: Principal Review');
+  const escIdx = stages.findIndex(s => s.label === 'Approval: Escalation');
+  const ppIdx  = stages.findIndex(s => s.label === 'Post Processing');
+
+  if (pr1Idx !== -1 && escIdx !== -1 && ppIdx !== -1) {
+    // Pre-branch stages
+    stageHTML += '<div class="stage-row">';
+    for (let i = 0; i <= pr1Idx; i++) {
+      if (i > 0) stageHTML += '<span class="stage-arrow">â</span>';
+      stageHTML += `<button class="stage-btn ${stages[i].cls}">${stages[i].label}</button>`;
+    }
+    stageHTML += '</div>';
+
+    // Branch diagram
+    stageHTML += `<div class="branch-diagram">
+      <div class="branch-path branch-escalation">
+        <span class="branch-arrow-label">optional escalation</span>
+        <span class="stage-arrow">â</span>
+        <button class="stage-btn ${stages[escIdx].cls}">${stages[escIdx].label}</button>
+        <span class="stage-arrow">â</span>
+      </div>
+      <div class="branch-path branch-direct">
+        <span class="branch-arrow-label">or directly</span>
+        <span class="stage-arrow">â</span>
+        <button class="stage-btn ${stages[ppIdx].cls}">${stages[ppIdx].label}</button>
+      </div>
+    </div>`;
+
+    // Post-branch stages (after Post Processing)
+    stageHTML += '<div class="stage-row" style="margin-top:8px;">';
+    stageHTML += `<button class="stage-btn ${stages[ppIdx].cls}">${stages[ppIdx].label}</button>`;
+    for (let i = ppIdx + 1; i < stages.length; i++) {
+      stageHTML += '<span class="stage-arrow">â</span>';
+      stageHTML += `<button class="stage-btn ${stages[i].cls}">${stages[i].label}</button>`;
+    }
+    stageHTML += '</div>';
+  } else {
+    // No branch â linear path
+    stageHTML += '<div class="stage-row">';
+    stages.forEach((s, i) => {
+      if (i > 0) stageHTML += '<span class="stage-arrow">â</span>';
+      stageHTML += `<button class="stage-btn ${s.cls}">${s.label}</button>`;
+    });
+    stageHTML += '</div>';
+  }
+
+  let assignHTML = '<table class="assign-table"><thead><tr><th>Stage</th><th>Assigned To</th></tr></thead><tbody>';
+  wf.assignments.forEach(a => {
+    assignHTML += `<tr><td>${a.stage}</td><td><span class="tag ${a.tag}">${a.assigned}</span></td></tr>`;
+  });
+  assignHTML += '</tbody></table>';
+
+  // Index answers summary
+  let idxHTML = '';
+  if (wfType === 'nao') {
+    const ans = state.indexAnswers;
+    const parts = [];
+    if (ans.funding)  parts.push(`<strong>Funding:</strong> ${ans.funding}`);
+    if (ans.rollover) parts.push(`<strong>Rollover:</strong> ${ans.rollover}`);
+    if (ans.mfswitch) parts.push(`<strong>MF Switch:</strong> ${ans.mfswitch}`);
+    if (parts.length) idxHTML = `<div class="index-answers">${parts.join('&nbsp;&nbsp;|&nbsp;&nbsp;')}</div>`;
+  }
+
+  section.innerHTML = `
+    <div class="result-title">${wf.name}</div>
+    ${wf.note ? `<div class="result-note">${wf.note}</div>` : ''}
+    <div class="result-section-label">Stage Path</div>
+    ${stageHTML}
+    ${idxHTML}
+    <div class="result-section-label">Stage Assignments</div>
+    ${assignHTML}
+  `;
+}
+
+// âââ RESET ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+function resetWizard() {
+  state = { rel: null, product: null, wfid: null, indexAnswers: { funding: null, rollover: 'No', mfswitch: null } };
+  ['brok','adv'].forEach(r => { const b = document.getElementById('btn-'+r); if(b) b.className='btn-green'; });
+  const a1 = document.getElementById('arrow1');
+  if (a1 && a1.style.display !== 'none') a1.style.opacity = '0.25';
+  document.getElementById('arrow2').style.opacity = '0.25';
+  document.getElementById('step3-content').innerHTML = '<span style="font-size:12px;color:#a0aec0;padding-top:8px;">Select transaction type first</span>';
+  document.getElementById('result-section').classList.add('hidden');
+  document.getElementById('index-section').classList.add('hidden');
+  if (wfType === 'nao') document.getElementById('product-buttons').innerHTML = '<span style="font-size:12px;color:#a0aec0;padding-top:8px;">Select relationship type first</span>';
+}
+</script>
+</body>
+</html>
