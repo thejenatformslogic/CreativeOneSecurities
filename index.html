@@ -166,6 +166,18 @@
       </div>
     </div>
 
+    <!-- Custodian question (Maintenance only — full-maintenance items) -->
+    <div id="maint-custodian-section" class="index-section hidden">
+      <div class="index-title">Additional Information</div>
+      <div class="index-row">
+        <span class="index-q">What is the custodian?</span>
+        <div class="index-opts" id="opts-custodian">
+          <button class="btn-idx" onclick="selectMaintCustodian('Pershing')">Pershing</button>
+          <button class="btn-idx" onclick="selectMaintCustodian('All Other Custodian')">All Other Custodian</button>
+        </div>
+      </div>
+    </div>
+
     <div id="result-section" class="result-card hidden"></div>
     <span class="reset-link" onclick="resetWizard()">↺ Start over</span>
   </div>
@@ -173,11 +185,34 @@
 
 <script>
 // ─── STATE ───────────────────────────────────────────────────────────────────
-let state = { rel: null, product: null, wfid: null, indexAnswers: { funding: null, rollover: 'No', mfswitch: null } };
+let state = { rel: null, product: null, wfid: null, maintLabel: null, maintCustodian: null, indexAnswers: { funding: null, rollover: 'No', mfswitch: null } };
 let wfType = 'nao';
 
 // Products that show mutual fund switch question
 const MF_SWITCH_PRODUCTS = ['Mutual Fund', '529 Plan', 'Brokerage'];
+
+// Full-maintenance items whose display name changes when custodian = Pershing
+// (routes to Maintenance5 — Pershing custodial maintenance)
+const PERSHING_LABEL_OVERRIDES = {
+  'ACH Banking Instructions - New/Update':      'ACH - New/Update',
+  'Alternative Investment Purchase':            'Brokerage Alternative Investment Purchase',
+  'Qualified Retirement Plan Dist Req':         'Qualified Retirement Plan and 403(b)(7) Dist Req',
+  'Roth Conversion':                            'Roth Conversion/Recharacterization Request',
+};
+// All 32 shared full-maintenance transaction types (custodian question applies)
+const FULL_MAINT_ITEMS = [
+  '529 Plan Subsequent Purchase','Account Transfer','Account Transfer - Receive',
+  'ACH Ad-Hoc Request','ACH Banking Instructions - New/Update','Address Change',
+  'Advisory Fee Billing Update','Advisory Termination','Alternative Investment Purchase',
+  'Alt Inv Conversion / Dist Mod / Redemption','Annuity Subsequent Purchase',
+  'Check Deposit (BO/FO)','Check Request (Regular/Overnight)','Client Account Form Update',
+  'Corporate Actions','Disposal of Security with Insignificant Value','Fed Wire Request',
+  'IRA / ESA Distribution Request','IRA Asset Movement Authorization',
+  'IRA Beneficiary Distribution Request','Journal Request','Mutual Fund Subsequent Purchase',
+  'Other','Private Transaction','Qualified Retirement Plan Dist Req','Returned Mail',
+  'Roth Conversion','Securities Trading Disclosures','Security to Non-Security',
+  'Signature Guarantee','Stock / Bond Certificate (BO/FO)','Trade Away / Step-Out',
+];
 
 // ─── PRODUCTS ────────────────────────────────────────────────────────────────
 const naoProducts = {
@@ -338,6 +373,11 @@ const workflows = {
     stages: STD_STAGES, assignments: STD_ASSIGNS,
     note: 'After Principal Review, back office routes to escalation or Post Processing. Post Processing then Pre-Final QA before Finalize.',
   },
+  'maint-escalation': {
+    name: 'Maintenance with Escalation — Reviews / Planning / Consulting',
+    stages: STD_STAGES, assignments: STD_ASSIGNS,
+    note: 'Adds optional Escalation step after Principal Review. Pre-Final QA explicitly assigned to Operations Team.',
+  },
   'maint-short': {
     name: 'Short Maintenance — Meeting Notes',
     stages: MAINT_SHORT, assignments: MAINT_SHORT_A,
@@ -358,6 +398,14 @@ function selectIdx(field, value) {
   document.querySelectorAll(`#${map[field]} .btn-idx`).forEach(btn => {
     btn.className = 'btn-idx' + (btn.textContent.trim() === value ? ' active' : '');
   });
+}
+
+function selectMaintCustodian(value) {
+  state.maintCustodian = value;
+  document.querySelectorAll('#opts-custodian .btn-idx').forEach(btn => {
+    btn.className = 'btn-idx' + (btn.textContent.trim() === value ? ' active' : '');
+  });
+  renderResult();
 }
 
 // ─── SWITCH WORKFLOW TYPE ─────────────────────────────────────────────────────
@@ -389,8 +437,25 @@ function switchType(type) {
       sel.appendChild(opt);
     });
     sel.onchange = () => {
-      if (sel.value) { state.product = sel.value; renderResult(); }
-      else document.getElementById('result-section').classList.add('hidden');
+      if (sel.value) {
+        state.product = sel.value;
+        const selectedLabel = sel.options[sel.selectedIndex].textContent;
+        state.maintLabel = selectedLabel;
+        state.maintCustodian = null;
+
+        const custodianSection = document.getElementById('maint-custodian-section');
+        if (FULL_MAINT_ITEMS.includes(selectedLabel)) {
+          custodianSection.classList.remove('hidden');
+          document.querySelectorAll('#opts-custodian .btn-idx').forEach(b => b.className = 'btn-idx');
+          document.getElementById('result-section').classList.add('hidden');
+        } else {
+          custodianSection.classList.add('hidden');
+          renderResult();
+        }
+      } else {
+        document.getElementById('result-section').classList.add('hidden');
+        document.getElementById('maint-custodian-section').classList.add('hidden');
+      }
     };
     container.appendChild(sel);
     document.getElementById('arrow2').style.opacity = '1';
@@ -458,17 +523,41 @@ function renderResult() {
   const wf = workflows[state.product];
   if (!wf) return;
 
+  // If this is a full-maintenance item requiring custodian, wait for the answer
+  if (FULL_MAINT_ITEMS.includes(state.maintLabel) && !state.maintCustodian) {
+    return;
+  }
+
   const section = document.getElementById('result-section');
   section.classList.remove('hidden');
 
+  // Determine display name — apply Pershing override if applicable
+  let displayName = wf.name;
+  let pershingNote = '';
+  if (state.maintCustodian === 'Pershing' && PERSHING_LABEL_OVERRIDES[state.maintLabel]) {
+    const overrideLabel = PERSHING_LABEL_OVERRIDES[state.maintLabel];
+    displayName = `Pershing Custodial Maintenance — ${overrideLabel}`;
+    pershingNote = `Routes to Maintenance5 (Pershing Custodial Maintenance). Transaction type name: "${overrideLabel}".`;
+  } else if (state.maintCustodian === 'Pershing') {
+    displayName = `Pershing Custodial Maintenance — ${state.maintLabel}`;
+    pershingNote = 'Routes to Maintenance5 (Pershing Custodial Maintenance).';
+  } else if (state.maintCustodian === 'All Other Custodian') {
+    pershingNote = 'Routes to Maintenance1 (Full Maintenance — non-Pershing).';
+  }
+
   // Build stage path — show branch at Principal Review
+  // Branch logic is generic: whatever stage immediately follows PR1 is treated
+  // as the optional Escalation step, and whatever follows Escalation is the
+  // convergence point (Post Processing, Pre-Final QA, or Finalized depending
+  // on the workflow) — both the escalation path and the direct path land there.
   let stageHTML = '';
   const stages = wf.stages;
   const pr1Idx = stages.findIndex(s => s.label === 'Approval: Principal Review');
-  const escIdx = stages.findIndex(s => s.label === 'Approval: Escalation');
-  const ppIdx  = stages.findIndex(s => s.label === 'Post Processing');
+  const escIdx = (pr1Idx !== -1 && stages[pr1Idx + 1] && stages[pr1Idx + 1].label === 'Approval: Escalation')
+    ? pr1Idx + 1 : -1;
+  const convergeIdx = escIdx !== -1 ? escIdx + 1 : -1;
 
-  if (pr1Idx !== -1 && escIdx !== -1 && ppIdx !== -1) {
+  if (pr1Idx !== -1 && escIdx !== -1 && convergeIdx !== -1 && convergeIdx < stages.length) {
     // Pre-branch stages
     stageHTML += '<div class="stage-row">';
     for (let i = 0; i <= pr1Idx; i++) {
@@ -488,14 +577,14 @@ function renderResult() {
       <div class="branch-path branch-direct">
         <span class="branch-arrow-label">or directly</span>
         <span class="stage-arrow">→</span>
-        <button class="stage-btn ${stages[ppIdx].cls}">${stages[ppIdx].label}</button>
+        <button class="stage-btn ${stages[convergeIdx].cls}">${stages[convergeIdx].label}</button>
       </div>
     </div>`;
 
-    // Post-branch stages (after Post Processing)
+    // Post-branch stages (from convergence point onward)
     stageHTML += '<div class="stage-row" style="margin-top:8px;">';
-    stageHTML += `<button class="stage-btn ${stages[ppIdx].cls}">${stages[ppIdx].label}</button>`;
-    for (let i = ppIdx + 1; i < stages.length; i++) {
+    stageHTML += `<button class="stage-btn ${stages[convergeIdx].cls}">${stages[convergeIdx].label}</button>`;
+    for (let i = convergeIdx + 1; i < stages.length; i++) {
       stageHTML += '<span class="stage-arrow">→</span>';
       stageHTML += `<button class="stage-btn ${stages[i].cls}">${stages[i].label}</button>`;
     }
@@ -528,8 +617,9 @@ function renderResult() {
   }
 
   section.innerHTML = `
-    <div class="result-title">${wf.name}</div>
+    <div class="result-title">${displayName}</div>
     ${wf.note ? `<div class="result-note">${wf.note}</div>` : ''}
+    ${pershingNote ? `<div class="result-note">${pershingNote}</div>` : ''}
     <div class="result-section-label">Stage Path</div>
     ${stageHTML}
     ${idxHTML}
@@ -540,7 +630,7 @@ function renderResult() {
 
 // ─── RESET ────────────────────────────────────────────────────────────────────
 function resetWizard() {
-  state = { rel: null, product: null, wfid: null, indexAnswers: { funding: null, rollover: 'No', mfswitch: null } };
+  state = { rel: null, product: null, wfid: null, maintLabel: null, maintCustodian: null, indexAnswers: { funding: null, rollover: 'No', mfswitch: null } };
   ['brok','adv'].forEach(r => { const b = document.getElementById('btn-'+r); if(b) b.className='btn-green'; });
   const a1 = document.getElementById('arrow1');
   if (a1 && a1.style.display !== 'none') a1.style.opacity = '0.25';
@@ -548,6 +638,7 @@ function resetWizard() {
   document.getElementById('step3-content').innerHTML = '<span style="font-size:12px;color:#a0aec0;padding-top:8px;">Select transaction type first</span>';
   document.getElementById('result-section').classList.add('hidden');
   document.getElementById('index-section').classList.add('hidden');
+  document.getElementById('maint-custodian-section').classList.add('hidden');
   if (wfType === 'nao') document.getElementById('product-buttons').innerHTML = '<span style="font-size:12px;color:#a0aec0;padding-top:8px;">Select relationship type first</span>';
 }
 </script>
