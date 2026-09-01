@@ -13,7 +13,6 @@
   .main { max-width: 1100px; margin: 0 auto; padding: 32px 24px 60px; }
   .page-title { font-size: 22px; font-weight: 600; color: #2d3748; margin-bottom: 6px; }
   .page-sub { font-size: 14px; color: #718096; margin-bottom: 32px; }
-  .banner { background: #fff8e1; border: 1px solid #ffc107; border-radius: 6px; padding: 10px 16px; font-size: 13px; color: #856404; margin-bottom: 20px; }
   .wf-toggle { display: flex; gap: 8px; margin-bottom: 20px; }
   .btn-toggle { padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; border: 2px solid #1a2540; transition: all 0.15s; background: white; color: #1a2540; }
   .btn-toggle.active { background: #1a2540; color: white; }
@@ -34,39 +33,54 @@
   .btn-blue.active { background: #2568a8; box-shadow: 0 0 0 3px rgba(74,144,217,0.35); }
   .btn-blue.inactive { opacity: 0.45; cursor: default; }
   .maint-select { width: 100%; max-width: 500px; padding: 10px 14px; font-size: 13px; border: 1px solid #cbd5e0; border-radius: 6px; background: white; color: #2d3748; cursor: pointer; }
-  .result-card { margin-top: 24px; padding-top: 20px; border-top: 1px solid #e2e8f0; }
+  .result-card { margin-top: 24px; padding-top: 20px; border-top: 1px solid #e2e8f0; animation: fadeIn 0.3s ease; }
   .result-title { font-size: 16px; font-weight: 700; color: #1a2540; margin-bottom: 12px; }
   .result-note { font-size: 12px; color: #718096; margin-bottom: 14px; padding: 8px 12px; background: #f7fafc; border-radius: 4px; border-left: 3px solid #4a90d9; }
   .result-section-label { font-size: 11px; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; margin-top: 16px; }
   .stage-row { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+  .stage-wrap { display: flex; flex-direction: column; align-items: center; gap: 3px; }
   .stage-btn { padding: 6px 12px; border-radius: 3px; font-size: 11px; font-weight: 600; border: none; cursor: default; white-space: nowrap; }
+  .stage-btn.optional { border: 2px dashed rgba(255,255,255,0.85); }
+  .opt-flag { font-size: 9px; color: #b7791f; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+  .opt-spacer { font-size: 9px; color: transparent; }
   .stage-started    { background: #718096; color: white; }
   .stage-sig        { background: #9b59b6; color: white; }
   .stage-review     { background: #4a90d9; color: white; }
   .stage-approval   { background: #e67e22; color: white; }
   .stage-escalation { background: #c0392b; color: white; }
+  .stage-field      { background: #2e7d32; color: white; }
   .stage-processing { background: #27ae60; color: white; }
   .stage-prefinal   { background: #16a085; color: white; }
   .stage-final      { background: #2c3e50; color: white; }
-  .stage-arrow      { color: #a0aec0; font-size: 12px; }
+  .stage-arrow      { color: #a0aec0; font-size: 12px; padding-top: 7px; }
   .assign-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 4px; }
   .assign-table th { text-align: left; padding: 6px 10px; background: #f7fafc; color: #718096; font-weight: 600; font-size: 11px; border-bottom: 1px solid #e2e8f0; }
   .assign-table td { padding: 6px 10px; border-bottom: 1px solid #edf2f7; color: #4a5568; }
   .assign-table tr:last-child td { border-bottom: none; }
   .tag { display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 10px; font-weight: 500; }
   .tag-bo   { background: #e3f2fd; color: #1565c0; }
-  .tag-fo   { background: #e8f5e9; color: #2e7d32; }
   .tag-owner{ background: #fff8e1; color: #f57f17; }
-  .tag-auto { background: #fce4ec; color: #c62828; }
+  .tag-ops  { background: #f3e5f5; color: #6a1b9a; }
+  .tag-none { background: #eceff1; color: #78909c; font-style: italic; }
+  .opt-cell { font-size: 10px; color: #b7791f; font-weight: 600; }
+  .btn-idx { background: #edf2f7; color: #4a5568; border: 1px solid #cbd5e0; border-radius: 4px; padding: 8px 20px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .btn-idx:hover { background: #e2e8f0; }
+  .btn-idx.active { background: #4a90d9; color: white; border-color: #4a90d9; }
+  .branch-diagram { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 8px 24px; padding: 10px 16px; border-left: 3px solid #e67e22; background: #fef9f5; border-radius: 0 6px 6px 0; }
+  .branch-head { font-size: 11px; font-weight: 700; color: #b7791f; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 2px; }
+  .branch-path { display: flex; align-items: center; gap: 6px; }
+  .branch-arrow-label { font-size: 11px; color: #a0aec0; font-style: italic; min-width: 92px; }
   .reset-link { font-size: 12px; color: #a0aec0; cursor: pointer; text-decoration: underline; margin-top: 16px; display: inline-block; }
+  .reset-link:hover { color: #718096; }
   .hidden { display: none !important; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
 <body>
 
 <div class="header">
   <div style="display:flex;align-items:center;gap:14px;">
-    <span class="hamburger">☰</span>
+    <span class="hamburger">&#9776;</span>
     <svg width="160" height="40" viewBox="0 0 160 40" xmlns="http://www.w3.org/2000/svg">
       <rect x="4" y="8" width="24" height="24" rx="4" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
       <text x="16" y="24" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="white">C1S</text>
@@ -75,9 +89,9 @@
     </svg>
   </div>
   <div class="header-right">
-    <span>Creative One Securities ▾</span>
+    <span>Creative One Securities &#9662;</span>
     <span style="margin:0 4px;opacity:0.4;">|</span>
-    <span>User ▾</span>
+    <span>User &#9662;</span>
   </div>
 </div>
 
@@ -87,504 +101,532 @@
     <button class="btn-toggle"        id="toggle-maint" onclick="switchType('maint')">Maintenance Workflow</button>
   </div>
   <div class="page-title" id="page-title">New Account Workflow</div>
-  <div class="page-sub">Select the relationship type and transaction to begin.</div>
+  <div class="page-sub" id="page-sub">Select the relationship type and transaction to begin.</div>
 
   <div class="wizard-card">
     <div class="step-flow">
-      <div class="step-group" id="rel-group">
-        <div class="step-label">Relationship Type</div>
-        <div class="step-buttons">
-          <button class="btn-green" id="btn-brok" onclick="selectRel('brok')">Broker/Dealer</button>
-          <button class="btn-green" id="btn-adv"  onclick="selectRel('adv')">Advisory</button>
-        </div>
-      </div>
-      <div class="arrow-col" id="arrow1" style="opacity:0.25"><div class="arrow-btn">›</div></div>
       <div class="step-group">
-        <div class="step-label">Transaction Type</div>
-        <div class="step-buttons" id="product-buttons">
-          <span style="font-size:12px;color:#a0aec0;padding-top:8px;">Select relationship type first</span>
-        </div>
+        <div class="step-label" id="step1-label">Relationship Type</div>
+        <div class="step-buttons" id="step1-content"></div>
       </div>
-      <div class="arrow-col" id="arrow2" style="opacity:0.25"><div class="arrow-btn">›</div></div>
+      <div class="arrow-col" id="arrow1" style="opacity:0.25"><div class="arrow-btn">&rsaquo;</div></div>
       <div class="step-group">
-        <div class="step-label">Details</div>
-        <div id="step3-content" style="font-size:12px;color:#a0aec0;padding-top:8px;">Select transaction type first</div>
+        <div class="step-label" id="step2-label">Transaction Type</div>
+        <div class="step-buttons" id="step2-content"></div>
       </div>
-    </div>
-
-    <!-- Index Questions (NAO only) -->
-    <div id="index-section" class="hidden" style="margin-top:24px;padding-top:20px;border-top:1px solid #e2e8f0;">
-      <div style="font-size:13px;font-weight:600;color:#4a5568;margin-bottom:14px;">Additional Information</div>
-
-      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
-        <span style="font-size:13px;color:#4a5568;font-weight:500;min-width:380px;">What is the funding type?</span>
-        <div style="display:flex;gap:7px;flex-wrap:wrap;" id="opts-funding">
-          <button class="btn-idx" onclick="selectIdx('funding','Transfer')">Transfer</button>
-          <button class="btn-idx" onclick="selectIdx('funding','Check')">Check</button>
-          <button class="btn-idx" onclick="selectIdx('funding','Wire')">Wire</button>
-          <button class="btn-idx" onclick="selectIdx('funding','Other')">Other</button>
-        </div>
-      </div>
-
-      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
-        <span style="font-size:13px;color:#4a5568;font-weight:500;min-width:380px;">Is this transaction a retirement-to-retirement rollover or transfer?</span>
-        <div style="display:flex;gap:7px;flex-wrap:wrap;" id="opts-rollover">
-          <button class="btn-idx active" onclick="selectIdx('rollover','No')">No</button>
-          <button class="btn-idx" onclick="selectIdx('rollover','Yes')">Yes</button>
-        </div>
-      </div>
-
-      <div id="row-options" class="hidden" style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
-        <span style="font-size:13px;color:#4a5568;font-weight:500;min-width:380px;">Does this trade options?</span>
-        <div style="display:flex;gap:7px;flex-wrap:wrap;" id="opts-options">
-          <button class="btn-idx" onclick="selectIdx('options','Yes')">Yes</button>
-          <button class="btn-idx" onclick="selectIdx('options','No')">No</button>
-        </div>
-      </div>
-
-      <div id="row-mfswitch" class="hidden" style="display:flex;align-items:flex-start;gap:12px;margin-bottom:0;flex-wrap:wrap;">
-        <span style="font-size:13px;color:#4a5568;font-weight:500;min-width:380px;">Will this transaction include a mutual fund switch?</span>
-        <div style="display:flex;gap:7px;flex-wrap:wrap;" id="opts-mfswitch">
-          <button class="btn-idx" onclick="selectIdx('mfswitch','Yes')">Yes</button>
-          <button class="btn-idx" onclick="selectIdx('mfswitch','No')">No</button>
-        </div>
+      <div class="arrow-col" id="arrow2" style="opacity:0.25"><div class="arrow-btn">&rsaquo;</div></div>
+      <div class="step-group">
+        <div class="step-label" id="step3-label">Details</div>
+        <div class="step-buttons" id="step3-content"></div>
       </div>
     </div>
 
     <div id="result-section" class="result-card hidden"></div>
-    <span class="reset-link" onclick="resetWizard()">↺ Start over</span>
+    <span class="reset-link" onclick="resetWizard()">&#8634; Start over</span>
   </div>
 </div>
 
-<style>
-  .btn-idx { background: #edf2f7; color: #4a5568; border: 1px solid #cbd5e0; border-radius: 4px; padding: 6px 14px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; }
-  .btn-idx:hover { background: #e2e8f0; }
-  .btn-idx.active { background: #4a90d9; color: white; border-color: #4a90d9; }
-</style>
-
 <script>
-let state = { rel: null, product: null, indexAnswers: { funding: null, rollover: 'No', mfswitch: null, options: null } };
+// ═══════════════════════════════════════════════════════════════════════════════
+// Maintenance stages, transaction types and assignments are taken verbatim from
+// the Creative One maintenance source spreadsheet. Assignee spellings
+// ("Prinicipals", "Operational Team") are preserved exactly as they appear there.
+// ═══════════════════════════════════════════════════════════════════════════════
+
+let state = { rel: null, custodian: null, product: null };
 let wfType = 'nao';
 
-// Products that show the mutual fund switch question
-const MF_SWITCH_PRODUCTS = ['Mutual Fund', '529 Plan', 'Brokerage'];
+const NOT_SPECIFIED = { assigned:'Not specified in source', tag:'tag-none' };
 
-function selectIdx(field, value) {
-  state.indexAnswers[field] = value;
-  const map = { funding: 'opts-funding', rollover: 'opts-rollover', mfswitch: 'opts-mfswitch', options: 'opts-options' };
-  document.querySelectorAll(`#${map[field]} .btn-idx`).forEach(btn => {
-    btn.className = 'btn-idx' + (btn.textContent.trim() === value ? ' active' : '');
-  });
-  if (field === 'options') renderResult(state.lastProdLabel);
-}
+// ─── MAINTENANCE STAGES (per source spreadsheet) ──────────────────────────────
+const M_ST   = { label:'Started',                         cls:'stage-started'    };
+const M_SIGS = { label:'Signatures',                       cls:'stage-sig'        };
+const M_BOR  = { label:'BO Review',                        cls:'stage-review'     };
+const M_APR  = { label:'Approval - Principal',             cls:'stage-approval'   };
+const M_ESC  = { label:'Approval - Principal Escalation',  cls:'stage-escalation', optional:true };
+const M_FLD  = { label:'Field Processing',                 cls:'stage-field',      optional:true };
+const M_BOP  = { label:'Back Office Processing',           cls:'stage-processing' };
+const M_PFN  = { label:'Pre-Final',                        cls:'stage-prefinal'   };
+const M_FIN  = { label:'Finalized',                        cls:'stage-final'      };
 
-// ─── STAGE CONSTANTS (Appendix A/B naming) ────────────────────────────────────
-const ST  = { label:'Started',              cls:'stage-started'    };
-const SIG = { label:'Signatures',           cls:'stage-sig'        };
-const BOR = { label:'BO Review',            cls:'stage-review'     };
-const PA  = { label:'Principal Approval',   cls:'stage-approval'   };
-const PE  = { label:'Principal Escalation', cls:'stage-escalation' };
-const FOP = { label:'Front Office Processing', cls:'stage-processing' };
-const BOP = { label:'BO Processing',        cls:'stage-processing' };
-const PF  = { label:'Pre-Final',            cls:'stage-prefinal'   };
-const FIN = { label:'Finalized',            cls:'stage-final'      };
-
-const AA_ST  = { stage:'Started',              assigned:'System Required',              tag:'tag-owner' };
-const AA_SIG = { stage:'Signatures',           assigned:'Required (client signature)',  tag:'tag-owner' };
-const AA_BOR = { stage:'BO Review',            assigned:'Operational Team',             tag:'tag-bo'    };
-const AA_PA  = { stage:'Principal Approval',   assigned:'Principals',                   tag:'tag-bo'    };
-const AA_PE  = { stage:'Principal Escalation', assigned:'Principals (senior level)',    tag:'tag-bo'    };
-const AA_FOP = { stage:'Front Office Processing', assigned:'Advisor/Assistant',         tag:'tag-fo'    };
-const AA_BOP = { stage:'BO Processing',        assigned:'Operational Team',             tag:'tag-bo'    };
-const AA_PF  = { stage:'Pre-Final',            assigned:'Operational Team / Advisor',   tag:'tag-owner' };
-const AA_PA_MUNICIPAL = { stage:'Principal Approval', assigned:'Municipal Principal', tag:'tag-bo' };
-const AA_PA_OPTIONS   = { stage:'Principal Approval', assigned:'Options Principal',   tag:'tag-bo' };
-
-// ─── NAO WORKFLOWS (Appendix A — WF1-WF6) ─────────────────────────────────────
-const naoWorkflows = {
-  'nao-wf1': {
-    name: 'NAO WF1: Broker/Dealer - Direct Business',
-    stages: [ST, SIG, BOR, PA, PE, FOP, PF, FIN],
-    assignments: [AA_ST, AA_SIG, AA_BOR, AA_PA, AA_PE, AA_FOP, AA_PF],
-    note: 'Standard B/D workflow. NO BO Processing. Principal Escalation added (Creative One request). Pre-Final has Both Buttons.',
-  },
-  'nao-wf2': {
-    name: 'NAO WF2: Advisory - RIA Direct',
-    stages: [ST, SIG, BOR, PA, PE, FOP, BOP, PF, FIN],
-    assignments: [AA_ST, AA_SIG, AA_BOR, AA_PA, AA_PE, AA_FOP, AA_BOP, AA_PF],
-    note: 'Advisory workflow. HAS BO Processing after FO Processing. Principal Escalation added (Creative One request).',
-  },
-  'nao-wf3': {
-    name: 'NAO WF3: Broker/Dealer - With Escalation',
-    stages: [ST, SIG, BOR, PA, PE, FOP, PF, FIN],
-    assignments: [AA_ST, AA_SIG, AA_BOR, AA_PA, AA_PE, AA_FOP, AA_PF],
-    note: 'HAS Principal Escalation (e.g., Variable Annuity over $100K). Pre-Final has Both Buttons.',
-  },
-  'nao-wf3-municipal': {
-    name: 'NAO WF3: Broker/Dealer - With Escalation',
-    stages: [ST, SIG, BOR, PA, PE, FOP, PF, FIN],
-    assignments: [AA_ST, AA_SIG, AA_BOR, AA_PA_MUNICIPAL, AA_PE, AA_FOP, AA_PF],
-    note: 'B/D 529 Plan — Principal Approval assigned to Municipal Principal (Creative One request).',
-  },
-  'nao-wf4': {
-    name: 'NAO WF4: Advisory/Brokerage - With Escalation',
-    stages: [ST, SIG, BOR, PA, PE, FOP, BOP, PF, FIN],
-    assignments: [AA_ST, AA_SIG, AA_BOR, AA_PA, AA_PE, AA_FOP, AA_BOP, AA_PF],
-    note: 'Most complex workflow — 9 stages. HAS both Principal Escalation AND BO Processing.',
-  },
-  'nao-wf5': {
-    name: 'NAO WF5: Advisory - Financial Planning',
-    stages: [ST, SIG, BOR, PA, PE, BOP, PF, FIN],
-    assignments: [AA_ST, AA_SIG, AA_BOR, AA_PA, AA_PE, AA_BOP, AA_PF],
-    note: 'NO Front Office Processing — goes directly to BO Processing. Principal Escalation added (Creative One request).',
-  },
-  'nao-wf6': {
-    name: 'NAO WF6: Broker/Dealer - Trade Away',
-    stages: [ST, SIG, BOR, PA, PE, BOP, FIN],
-    assignments: [AA_ST, AA_SIG, AA_BOR, AA_PA, AA_PE, AA_BOP],
-    note: 'Simplest workflow — NO FO Processing, NO Pre-Final. Principal Escalation added (Creative One request).',
-  },
+const MAINT_ASSIGNMENTS = {
+  'Started':                         NOT_SPECIFIED,
+  'Signatures':                      NOT_SPECIFIED,
+  'BO Review':                       { assigned:'Operational Team', tag:'tag-ops'   },
+  'Approval - Principal':            { assigned:'Prinicipals',      tag:'tag-bo'    },
+  'Approval - Principal Escalation': { assigned:'Prinicipals',      tag:'tag-bo'    },
+  'Field Processing':                { assigned:'Workflow Creator', tag:'tag-owner' },
+  'Back Office Processing':          { assigned:'Operational Team', tag:'tag-ops'   },
+  'Pre-Final':                       { assigned:'Operational Team', tag:'tag-ops'   },
 };
 
+// ─── NAO STAGES (per NAO source spreadsheet) ─────────────────────────────────
+const N_ST  = { label:'Started',                                cls:'stage-started'    };
+const N_SIG = { label:'Signatures',                             cls:'stage-sig'        };
+const N_BOR = { label:'Back Office Review',                     cls:'stage-review'     };
+const N_APR = { label:'Approval - Principal Review',            cls:'stage-approval'   };
+const N_ESC = { label:'Approval - Principal Review Escalation', cls:'stage-escalation', optional:true };
+const N_FLD = { label:'Field Processing',                       cls:'stage-field',      optional:true };
+const N_BOP = { label:'Back Office Processing',                 cls:'stage-processing' };
+const N_PFQ = { label:'Pre-Final QA',                           cls:'stage-prefinal'   };
+const N_FIN = { label:'Finalized',                              cls:'stage-final'      };
+
+const NAO_ASSIGNMENTS = {
+  'Started':                                { assigned:'System Required',  tag:'tag-auto'  },
+  'Signatures':                             NOT_SPECIFIED,
+  'Back Office Review':                     { assigned:'Operational Team', tag:'tag-ops'   },
+  'Approval - Principal Review':            { assigned:'Prinicipals',      tag:'tag-bo'    },
+  'Approval - Principal Review Escalation': { assigned:'Prinicipals',      tag:'tag-bo'    },
+  'Field Processing':                       { assigned:'Workflow Creator', tag:'tag-owner' },
+  'Back Office Processing':                 { assigned:'Operational Team', tag:'tag-ops'   },
+  'Pre-Final QA':                           { assigned:'Operational Team', tag:'tag-ops'   },
+};
+
+function assignsFor(stages, map, overrides) {
+  overrides = overrides || {};
+  return stages.filter(function(s){ return map[s.label] || overrides[s.label]; })
+               .map(function(s){
+                 var a = overrides[s.label] || map[s.label];
+                 return { stage:s.label, optional: !!s.optional, assigned:a.assigned, tag:a.tag };
+               });
+}
+
+// ─── MAINTENANCE STAGE PATHS ─────────────────────────────────────────────────
+const WF1_STAGES = [M_ST, M_SIGS, M_BOR, M_APR, M_ESC, M_FLD, M_BOP, M_PFN, M_FIN];
+const WF2_STAGES = [M_ST, M_SIGS, M_BOR, M_APR, M_ESC, M_FLD, M_BOP, M_PFN, M_FIN];
+const WF3_STAGES = [M_ST, M_BOR, M_APR, M_ESC, M_FIN];
+const WF5_STAGES = [M_ST, M_SIGS, M_BOR, M_APR, M_ESC, M_BOP, M_PFN, M_FIN];
+
+// ─── NAO STAGE PATHS (per NAO source spreadsheet) ────────────────────────────
+const NAO1_STAGES = [N_ST, N_SIG, N_BOR, N_APR, N_ESC, N_FLD, N_BOP, N_PFQ, N_FIN];
+const NAO2_STAGES = [N_ST, N_SIG, N_BOR, N_APR, N_ESC, N_BOP, N_PFQ, N_FIN];
+const NAO3_STAGES = [N_ST, N_SIG, N_BOR, N_APR, N_ESC, N_FLD, N_BOP, N_PFQ, N_FIN];
+const NAO4_STAGES = [N_ST, N_SIG, N_BOR, N_APR, N_ESC, N_BOP, N_FIN];
+const NAO5_STAGES = [N_ST, N_SIG, N_BOR, N_APR, N_ESC, N_BOP, N_FIN];
+const NAO6_STAGES = [N_ST, N_SIG, N_BOR, N_APR, N_ESC, N_FIN];
+
+// ─── NAO PRODUCTS (per NAO source spreadsheet) ───────────────────────────────
 const naoProducts = {
   brok: [
-    { id:'nao-wf1', label:'RILA or Annuity E-Apps' },
-    { id:'nao-wf1', label:'Fixed Index Annuity (FIA)' },
-    { id:'nao-wf1', label:'Outside Custodian' },
-    { id:'nao-wf1', label:'Sponsor Level Retirement Plan' },
-    { id:'nao-wf1', label:'Alternatives Direct' },
-    { id:'nao-wf1', label:'Mutual Fund' },
-    { id:'nao-wf1', label:'Other Direct Business' },
-    { id:'nao-wf1', label:'Broker/Dealer Change' },
-    { id:'nao-wf1', label:'Variable Universal Life (VUL)' },
-    { id:'nao-wf3-municipal', label:'529 Plan' },
-    { id:'nao-wf3', label:'Variable Annuity' },
-    { id:'nao-wf6', label:'Trade Away' },
-    { id:'nao-wf4', label:'Brokerage' },
+    { id:'nao1', label:'Outside Custodian' },
+    { id:'nao1', label:'Sponsor Level Retirement Plan' },
+    { id:'nao1', label:'Alternatives (Direct)' },
+    { id:'nao1', label:'Mutual Fund' },
+    { id:'nao1', label:'Variable Universal Life (VUL)' },
+    { id:'nao1', label:'Fixed Index Annuity' },
+    { id:'nao1', label:'RILA or Annuity E-Apps' },
+    { id:'nao1', label:'Other Direct Business' },
+    { id:'nao1', label:'Variable Annuity' },
+    { id:'nao3', label:'529 Plan' },
+    { id:'nao4', label:'Broker/Dealer Change' },
+    { label:'Brokerage', question:{ label:'Options', options:[
+        { label:'No',  wf:'nao4' },
+        { label:'Yes', wf:'nao5' }
+      ]} },
+    { id:'nao6', label:'Trade Away' }
   ],
   adv: [
-    { id:'nao-wf2', label:'Advisory Retirement Plan' },
-    { id:'nao-wf2', label:'RIA Change' },
-    { id:'nao-wf2', label:'New Business Advisory RIA Direct' },
-    { id:'nao-wf2', label:'Investment Consulting' },
-    { id:'nao-wf2', label:'Separately Managed Account' },
-    { id:'nao-wf4', label:'Advisory/Annuity' },
-    { id:'nao-wf4', label:'Advisory/Mutual Fund' },
-    { id:'nao-wf4', label:'New Business Advisory RIA Brokerage' },
-    { id:'nao-wf5', label:'Financial Planning' },
-  ],
+    { id:'nao1', label:'New Business Advisory RIA Direct' },
+    { id:'nao1', label:'New Business Advisory RIA Brokerage' },
+    { id:'nao1', label:'Advisory/Mutual Funds' },
+    { id:'nao1', label:'Advisory/Annuity' },
+    { id:'nao2', label:'Advisory Retirement Plan' },
+    { id:'nao2', label:'Investment Consulting' },
+    { id:'nao2', label:'Separately Managed Account' },
+    { id:'nao4', label:'RIA Change' },
+    { id:'nao4', label:'Financial Planning' }
+  ]
 };
 
-// ─── MAINTENANCE WORKFLOWS (Appendix B — M1-M5) ───────────────────────────────
-const maintWorkflows = {
-  'm1': {
-    name: 'M1 — General Maintenance (Non-Pershing Custodian)',
-    stages: [ST, SIG, BOR, PA, PE, FOP, PF, FIN],
-    assignments: [AA_ST, AA_SIG, AA_BOR, AA_PA, AA_PE, AA_FOP, AA_PF],
-    note: 'Routes here when custodian is NOT Pershing. Principal Escalation added (Creative One request).',
-  },
-  'm2': {
-    name: 'M2 — Reporting & Deliverables',
-    stages: [ST, SIG, BOR, PA, PE, FIN],
-    assignments: [AA_ST, AA_SIG, AA_BOR, AA_PA, AA_PE],
-    note: 'No processing stage. Principal Escalation added (Creative One request).',
-  },
-  'm3': {
-    name: 'M3 — Documentation',
-    stages: [ST, BOR, PA, PE, FIN],
-    assignments: [AA_ST, AA_BOR, AA_PA, AA_PE],
-    note: 'No signatures required. Principal Escalation added (Creative One request).',
-  },
-  'm4': {
-    name: 'M4 — Outside RIA',
-    stages: [ST, BOR, PA, PE, FOP, PF, FIN],
-    assignments: [AA_ST, AA_BOR, AA_PA, AA_PE, AA_FOP, AA_PF],
-    note: 'No signatures required. HAS Front Office Processing. Principal Escalation added (Creative One request).',
-  },
-  'm5': {
-    name: 'M5 — General Maintenance (Pershing Custodian)',
-    stages: [ST, SIG, BOR, PA, PE, BOP, PF, FIN],
-    assignments: [AA_ST, AA_SIG, AA_BOR, AA_PA, AA_PE, AA_BOP, AA_PF],
-    note: 'Routes here when custodian IS Pershing. Uses BO Processing, not Front Office Processing. Principal Escalation added (Creative One request).',
-  },
+// ─── MAINTENANCE TRANSACTION TYPES (per source spreadsheet) ──────────────────
+// byCustodian:true  -> the custodian determines which workflow this routes to.
+//                      Defaults to Workflow 5 (Pershing) / Workflow 1 (all others),
+//                      unless explicit pershing/other keys are given.
+// wf:'wfN'          -> routes to a single workflow regardless of custodian.
+// only:'other'      -> the source lists this type for non-Pershing only.
+const maintTypes = [
+  { label:'529 Plan Subsequent Purchase', byCustodian:true },
+  { label:'ACH Ad-Hoc Request', byCustodian:true },
+  { label:'ACH Banking Instructions-New/Update', byCustodian:true },
+  { label:'Account Transfer - Deliver', byCustodian:true },
+  { label:'Account Transfer - Receive', byCustodian:true },
+  { label:'Additional Support Documents', byCustodian:true },
+  { label:'Address Change', byCustodian:true },
+  { label:'Advisory Billing Update', byCustodian:true },
+  { label:'Advisory Termination', byCustodian:true },
+  { label:'Alt Inv Conversion/Dist Mod/Redemption', byCustodian:true },
+  { label:'Alternative Investment Purchase', byCustodian:true },
+  { label:'Annuity Subsequent Purchase', byCustodian:true },
+  { label:'Brokerage Trading Disclosures', byCustodian:true },
+  { label:'Check Deposit - Back Office', byCustodian:true },
+  { label:'Check Deposit - Front Office', byCustodian:true },
+  { label:'Check Request (Overnight)', byCustodian:true },
+  { label:'Check Request (Regular)', byCustodian:true },
+  { label:'Client Account Update', byCustodian:true },
+  { label:'Corporate Actions', byCustodian:true },
+  { label:'Courtesy Signature Guarantee', byCustodian:true },
+  { label:'Disposal of Security with Insignificant Value', byCustodian:true },
+  { label:'Fed Wire Request', byCustodian:true },
+  { label:'IRA Asset Movement Authorization', byCustodian:true },
+  { label:'IRA Beneficiary Distribution Request', byCustodian:true },
+  { label:'IRA/ESA Distribution Request', byCustodian:true },
+  { label:'Journal Request', byCustodian:true },
+  { label:'Mutual Fund Subsequent Purchase', byCustodian:true },
+  { label:'Other', byCustodian:true },
+  { label:'Private Transaction', byCustodian:true },
+  { label:'Qualified Retirement Plan and 403(b)(7) Dist Req', byCustodian:true },
+  { label:'Returned Mail', byCustodian:true },
+  { label:'Roth Conversion/Recharacterization Request', byCustodian:true },
+  { label:'Security to Non-Security', byCustodian:true },
+  { label:'Stock/Bond Certificate - Back Office', byCustodian:true },
+  { label:'Stock/Bond Certificate - Front Office', byCustodian:true },
+  { label:'Trade Away/Step-Out', wf:'wf1', only:'other' },
+  { label:'Annual Review', byCustodian:true, pershing:'wf2', other:'wf3' },
+  { label:'Consolidated Reporting', wf:'wf2' },
+  { label:'Financial Plan Deliverable', wf:'wf2' },
+  { label:'Meeting Notes', wf:'wf3' },
+];
+
+function resolveMaint(entry, custodian) {
+  if (!entry.byCustodian) return entry.wf;
+  if (!custodian) return null;
+  if (custodian === 'pershing') return entry.pershing || 'wf5';
+  return entry.other || 'wf1';
+}
+function needsCustodian(entry) { return !!entry.byCustodian; }
+function maintTypeByLabel(label) {
+  for (var i = 0; i < maintTypes.length; i++) {
+    if (maintTypes[i].label === label) return maintTypes[i];
+  }
+  return null;
+}
+
+// ─── WORKFLOW DEFINITIONS ─────────────────────────────────────────────────────
+const MUNI_PRINCIPAL = { 'Approval - Principal Review': { assigned:'Muncipal Principal', tag:'tag-bo' } };
+const OPT_PRINCIPAL  = { 'Approval - Principal Review': { assigned:'Options Principal',  tag:'tag-bo' } };
+
+const workflows = {
+  'nao1': { name:'NAO Workflow 1', stages:NAO1_STAGES, kind:'nao' },
+  'nao2': { name:'NAO Workflow 2', stages:NAO2_STAGES, kind:'nao',
+            note:'No Field Processing.' },
+  'nao3': { name:'NAO Workflow 3', stages:NAO3_STAGES, kind:'nao', overrides:MUNI_PRINCIPAL,
+            note:'Principal Review is handled by the Muncipal Principal rather than the standard principal group.' },
+  'nao4': { name:'NAO Workflow 4', stages:NAO4_STAGES, kind:'nao',
+            note:'No Field Processing and no Pre-Final QA.' },
+  'nao5': { name:'NAO Workflow 5', stages:NAO5_STAGES, kind:'nao', overrides:OPT_PRINCIPAL,
+            note:'Principal Review is handled by the Options Principal. No Field Processing and no Pre-Final QA.' },
+  'nao6': { name:'NAO Workflow 6', stages:NAO6_STAGES, kind:'nao',
+            note:'No Field Processing, Back Office Processing or Pre-Final QA.' },
+
+  'wf1': { name:'Maintenance Workflow 1 \u2014 General Maintenance', stages:WF1_STAGES, kind:'maint',
+           note:'Custodian is anything other than Pershing. Field Processing sends the forms to the Advisor/Assistant and is optional.' },
+  'wf2': { name:'Maintenance Workflow 2 \u2014 Reporting &amp; Deliverables', stages:WF2_STAGES, kind:'maint',
+           note:'Annual Review routes here when Pershing is the custodian. Field Processing is newly added for this workflow.' },
+  'wf3': { name:'Maintenance Workflow 3 \u2014 Documentation', stages:WF3_STAGES, kind:'maint',
+           note:'No signatures required. No Field Processing, Back Office Processing or Pre-Final stages.' },
+  'wf5': { name:'Maintenance Workflow 5 \u2014 General Maintenance (Pershing)', stages:WF5_STAGES, kind:'maint',
+           note:'Pershing is the custodian. No Field Processing \u2014 processing goes straight to Back Office.' }
 };
+Object.keys(workflows).forEach(function(k){
+  var w = workflows[k];
+  w.assignments = assignsFor(w.stages, w.kind === 'maint' ? MAINT_ASSIGNMENTS : NAO_ASSIGNMENTS, w.overrides);
+});
 
-// M1/M5 shared 35-item list (routes by custodian)
-const M1_M5_ITEMS = [
-  '529 Plan Subsequent Purchase','Account Transfer - Deliver','Account Transfer - Receive',
-  'ACH Ad-Hoc Request','ACH Banking Instructions-New/Update','Address Change',
-  'Advisory Billing Update','Advisory Termination','Alt Inv Conversion/Dist Mod/Redemption',
-  'Annuity Subsequent Purchase','Alternative Investment Purchase','Client Account Update',
-  'Check Deposit - Back Office','Check Deposit - Front Office','Check Request - Regular Mail Delivery',
-  'Check Request - Overnight Delivery','Corporate Actions','Disposal of Security with Insignificant Value',
-  'Fed Wire Request','IRA Asset Movement Authorization','IRA Beneficiary Distribution Request',
-  'IRA/ESA Distribution Request','Journal Request','Mutual Fund Subsequent Purchase','Other',
-  'Private Transaction','Qualified Retirement Plan and 403(b)(7) Dist Req','Returned Mail',
-  'Roth Conversion/Recharacterization Request','Securities Trading Disclosures','Security to Non-Security',
-  'Courtesy Signature Guarantee','Stock/Bond Certificate - Back Office','Stock/Bond Certificate - Front Office',
-  'Trade Away/Step-Out','Annual Review','Additional Supporting Documents',
-];
-
-const maintProducts = [
-  { id:'m2', label:'Investment Consulting Deliverable' },
-  { id:'m2', label:'Financial Planning Deliverable' },
-  { id:'m3', label:'Meeting Notes' },
-  { id:'m4', label:'Outside RIA' },
-];
-M1_M5_ITEMS.forEach(item => maintProducts.push({ id:'m1-m5', label: item }));
-
-// ─── RENDER LOGIC ──────────────────────────────────────────────────────────────
+// ─── SWITCH WORKFLOW TYPE ─────────────────────────────────────────────────────
 function switchType(type) {
   wfType = type;
+  document.getElementById('toggle-nao').className   = 'btn-toggle' + (type === 'nao'   ? ' active' : '');
+  document.getElementById('toggle-maint').className = 'btn-toggle' + (type === 'maint' ? ' active' : '');
+  document.getElementById('page-title').textContent = type === 'nao' ? 'New Account Workflow' : 'Maintenance Workflow';
+  document.getElementById('page-sub').textContent   = type === 'nao'
+    ? 'Select the relationship type and transaction to begin.'
+    : 'Select the transaction type to begin.';
   resetWizard();
-  document.getElementById('toggle-nao').className   = 'btn-toggle' + (type==='nao'   ? ' active' : '');
-  document.getElementById('toggle-maint').className = 'btn-toggle' + (type==='maint' ? ' active' : '');
-  document.getElementById('page-title').textContent = type==='nao' ? 'New Account Workflow' : 'Maintenance Workflow';
-  const relGroup = document.getElementById('rel-group');
-  const arrow1 = document.getElementById('arrow1');
-  if (type === 'maint') {
-    relGroup.style.display = 'none';
-    arrow1.style.display = 'none';
-    const container = document.getElementById('product-buttons');
-    container.innerHTML = '';
-    const sel = document.createElement('select');
-    sel.className = 'maint-select';
-    const def = document.createElement('option');
-    def.value=''; def.textContent='-- Select transaction type --';
-    sel.appendChild(def);
-    maintProducts.sort((a,b) => a.label.localeCompare(b.label)).forEach(prod => {
-      const opt = document.createElement('option');
-      opt.value = prod.id; opt.textContent = prod.label;
-      sel.appendChild(opt);
-    });
-    sel.onchange = () => {
-      if (sel.value) { selectMaintProduct(sel.value, sel.options[sel.selectedIndex].textContent); }
-      else { document.getElementById('result-section').classList.add('hidden'); const r=document.getElementById('maint-custodian-row'); if(r) r.remove(); }
-    };
-    container.appendChild(sel);
-    document.getElementById('arrow2').style.opacity = '1';
-  } else {
-    relGroup.style.display = '';
-    arrow1.style.display = '';
-    arrow1.style.opacity = '0.25';
-    document.getElementById('product-buttons').innerHTML = '<span style="font-size:12px;color:#a0aec0;padding-top:8px;">Select relationship type first</span>';
-    document.getElementById('arrow2').style.opacity = '0.25';
-  }
 }
 
+function setLabels(l1, l2, l3) {
+  document.getElementById('step1-label').textContent = l1;
+  document.getElementById('step2-label').textContent = l2;
+  document.getElementById('step3-label').textContent = l3;
+}
+function hint(txt) {
+  return '<span style="font-size:12px;color:#a0aec0;padding-top:8px;display:inline-block;">' + txt + '</span>';
+}
+function ready(txt) {
+  return '<span style="font-size:12px;color:#27ae60;font-weight:600;padding-top:8px;display:inline-block;">' + txt + '</span>';
+}
+
+// ─── NAO: relationship type -> transaction type ───────────────────────────────
 function selectRel(rel) {
-  state = { rel, product: null, indexAnswers: { funding: null, rollover: 'No', mfswitch: null, options: null } };
-  ['brok','adv'].forEach(r => document.getElementById('btn-'+r).className = 'btn-green' + (r===rel ? ' active' : ' inactive'));
+  state = { rel: rel, custodian: null, product: null, entry: null, question: null };
+  var btns = document.querySelectorAll('#step1-content .btn-green');
+  Array.prototype.forEach.call(btns, function(b){
+    b.className = 'btn-green' + (b.id === 'btn-' + rel ? ' active' : ' inactive');
+  });
   document.getElementById('arrow1').style.opacity = '1';
-  document.getElementById('result-section').classList.add('hidden');
-  document.getElementById('index-section').classList.add('hidden');
-  const container = document.getElementById('product-buttons');
-  container.innerHTML = '';
-  (naoProducts[rel]||[]).forEach(prod => {
-    const btn = document.createElement('button');
-    btn.className = 'btn-blue';
-    btn.textContent = prod.label;
-    btn.onclick = () => selectProduct(prod.id, btn);
-    container.appendChild(btn);
-  });
-  document.getElementById('arrow2').style.opacity = '1';
-}
-
-function selectProduct(prodId, clickedBtn) {
-  state.product = prodId;
-  state.indexAnswers = { funding: null, rollover: 'No', mfswitch: null, options: null };
-  document.querySelectorAll('.btn-blue').forEach(btn => btn.className = 'btn-blue' + (btn===clickedBtn ? ' active' : ' inactive'));
-
-  const prodLabel = clickedBtn.textContent;
-  state.lastProdLabel = prodLabel;
-  const showMF = MF_SWITCH_PRODUCTS.includes(prodLabel);
-  const showOptions = prodLabel === 'Brokerage';
-  document.getElementById('row-mfswitch').classList.toggle('hidden', !showMF);
-  document.getElementById('row-options').classList.toggle('hidden', !showOptions);
-  document.querySelectorAll('#opts-funding .btn-idx').forEach(b => b.className = 'btn-idx');
-  document.querySelectorAll('#opts-rollover .btn-idx').forEach((b,i) => b.className = 'btn-idx' + (i===0 ? ' active' : ''));
-  document.querySelectorAll('#opts-mfswitch .btn-idx').forEach(b => b.className = 'btn-idx');
-  document.querySelectorAll('#opts-options .btn-idx').forEach(b => b.className = 'btn-idx');
-  document.getElementById('index-section').classList.remove('hidden');
-
-  renderResult(prodLabel);
-}
-
-function selectMaintProduct(prodId, prodLabel) {
-  state.product = prodId;
-  state.maintCustodian = null;
-  if (prodId === 'm1-m5') {
-    const section = document.getElementById('result-section');
-    section.classList.add('hidden');
-    let existing = document.getElementById('maint-custodian-row');
-    if (existing) existing.remove();
-    const row = document.createElement('div');
-    row.id = 'maint-custodian-row';
-    row.style.cssText = 'margin-top:16px;padding-top:16px;border-top:1px solid #e2e8f0;';
-    row.innerHTML = `
-      <div style="font-size:13px;font-weight:500;color:#4a5568;margin-bottom:10px;">Where is the account custodied?</div>
-      <button class="btn-blue" style="min-width:120px;" onclick="selectMaintCustodian('Pershing', '${prodLabel.replace(/'/g,"\\'")}')">Pershing</button>
-      <button class="btn-blue" style="min-width:120px;" onclick="selectMaintCustodian('Non-Pershing', '${prodLabel.replace(/'/g,"\\'")}')">All Other Custodian</button>
-    `;
-    document.getElementById('product-buttons').insertAdjacentElement('afterend', row);
-  } else {
-    renderResult(prodLabel);
-  }
-}
-function selectMaintCustodian(custodian, prodLabel) {
-  state.maintCustodian = custodian;
-  state.product = custodian === 'Pershing' ? 'm5' : 'm1';
-  renderResult(prodLabel);
-}
-
-function renderResult(prodLabel) {
-  const wf = wfType === 'nao' ? naoWorkflows[state.product] : maintWorkflows[state.product];
-  if (!wf) return;
-  const section = document.getElementById('result-section');
-  section.classList.remove('hidden');
-
-  // Override Principal Approval assignee to Options Principal if Brokerage + options=Yes
-  let assignments = wf.assignments;
-  if (wfType === 'nao' && prodLabel === 'Brokerage' && state.indexAnswers.options === 'Yes') {
-    assignments = wf.assignments.map(a => a.stage === 'Principal Approval' ? AA_PA_OPTIONS : a);
-  }
-  // Build stage path — show branch at Principal Approval if Escalation follows
-  const stages = wf.stages;
-  const paIdx = stages.findIndex(s => s.label === 'Principal Approval');
-  const peIdx = (paIdx !== -1 && stages[paIdx+1] && stages[paIdx+1].label === 'Principal Escalation') ? paIdx+1 : -1;
-  const convergeIdx = peIdx !== -1 ? peIdx+1 : -1;
-  let stageHTML = '';
-  if (paIdx !== -1 && peIdx !== -1 && convergeIdx !== -1 && convergeIdx < stages.length) {
-    stageHTML += '<div class="stage-row">';
-    for (let i=0;i<=paIdx;i++){ if(i>0) stageHTML+='<span class="stage-arrow">→</span>'; stageHTML+=`<button class="stage-btn ${stages[i].cls}">${stages[i].label}</button>`; }
-    stageHTML += '</div>';
-    stageHTML += `<div style="display:flex;flex-direction:column;gap:6px;margin:8px 0 0 24px;padding:10px 16px;border-left:3px solid #e67e22;background:#fef9f5;border-radius:0 6px 6px 0;">
-      <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:11px;color:#a0aec0;font-style:italic;min-width:110px;">optional escalation</span><span class="stage-arrow">→</span><button class="stage-btn ${stages[peIdx].cls}">${stages[peIdx].label}</button><span class="stage-arrow">↓</span></div>
-      <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:11px;color:#a0aec0;font-style:italic;min-width:110px;">or directly</span><span class="stage-arrow">→</span><button class="stage-btn ${stages[convergeIdx].cls}">${stages[convergeIdx].label}</button></div>
-    </div>`;
-    stageHTML += '<div class="stage-row" style="margin-top:8px;">';
-    stageHTML += `<button class="stage-btn ${stages[convergeIdx].cls}">${stages[convergeIdx].label}</button>`;
-    for (let i=convergeIdx+1;i<stages.length;i++){ stageHTML+='<span class="stage-arrow">→</span>'; stageHTML+=`<button class="stage-btn ${stages[i].cls}">${stages[i].label}</button>`; }
-    stageHTML += '</div>';
-  } else {
-  stageHTML = '<div class="stage-row">';
-  wf.stages.forEach((s,i) => {
-    if (i>0) stageHTML += '<span class="stage-arrow">→</span>';
-    stageHTML += `<button class="stage-btn ${s.cls}">${s.label}</button>`;
-  });
-  stageHTML += '</div>';
-  }
-  let assignHTML = '<table class="assign-table"><thead><tr><th>Stage</th><th>Assigned To</th></tr></thead><tbody>';
-  assignments.forEach(a => { assignHTML += `<tr><td>${a.stage}</td><td><span class="tag ${a.tag}">${a.assigned}</span></td></tr>`; });
-  assignHTML += '</tbody></table>';
-  const titleLabel = prodLabel ? `${wf.name} — ${prodLabel}` : wf.name;
-
-  let idxHTML = '';
-  if (wfType === 'nao') {
-    const ans = state.indexAnswers;
-    const parts = [];
-    if (ans.funding)  parts.push(`<strong>Funding:</strong> ${ans.funding}`);
-    if (ans.rollover) parts.push(`<strong>Rollover:</strong> ${ans.rollover}`);
-    if (ans.mfswitch) parts.push(`<strong>MF Switch:</strong> ${ans.mfswitch}`);
-    if (parts.length) idxHTML = `<div style="margin-top:16px;padding:10px 14px;background:#f7fafc;border-radius:6px;border:1px solid #e2e8f0;font-size:12px;color:#4a5568;">${parts.join('&nbsp;&nbsp;|&nbsp;&nbsp;')}</div>`;
-  }
-
-  const noteKey = `${wfType}::${prodLabel || wf.name}`;
-  const existingNote = (window.__feedbackNotes && window.__feedbackNotes[noteKey]) || '';
-  const savedReviewer = (localStorage.getItem('c1s_reviewer_name') || '').replace(/"/g, '&quot;');
-  const noteCount = Object.keys(window.__feedbackNotes || {}).length;
-  const notesHTML = `
-    <div class="result-section-label">Your Feedback</div>
-    <div style="border:1px solid #e2e8f0;border-radius:8px;padding:16px;background:#fafbfc;">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-        <label style="font-size:13px;font-weight:600;color:#4a5568;">Reviewer Name:</label>
-        <input type="text" id="reviewer-name" value="${savedReviewer}" placeholder="Enter your name" style="padding:8px 12px;font-size:13px;border:1px solid #cbd5e0;border-radius:4px;width:200px;" onchange="saveReviewerName()">
-      </div>
-      <textarea id="note-input" placeholder="Note any changes needed for this transaction type..." style="width:100%;min-height:70px;padding:10px 12px;font-size:13px;border:1px solid #cbd5e0;border-radius:6px;font-family:inherit;resize:vertical;margin-bottom:12px;" onblur="saveNote('${noteKey.replace(/'/g,"\\'")}', '${wfType}', '${(prodLabel||wf.name).replace(/'/g,"\\'")}')">${existingNote}</textarea>
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-        <span id="feedback-count" style="font-size:12px;color:#718096;">${noteCount} note${noteCount === 1 ? '' : 's'} saved</span>
-        <button onclick="downloadFeedback()" style="background:#1a2540;color:white;border:none;border-radius:4px;padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;">⬇ Download My Feedback</button>
-      </div>
-    </div>
-  `;
-
-  section.innerHTML = `<div class="result-title">${titleLabel}</div>${wf.note ? `<div class="result-note">${wf.note}</div>` : ''}<div class="result-section-label">Stage Path</div>${stageHTML}${idxHTML}<div class="result-section-label">Stage Assignments</div>${assignHTML}${notesHTML}`;
-}
-
-function resetWizard() {
-  state = { rel: null, product: null, indexAnswers: { funding: null, rollover: 'No', mfswitch: null, options: null } };
-  ['brok','adv'].forEach(r => { const b=document.getElementById('btn-'+r); if(b) b.className='btn-green'; });
-  const a1 = document.getElementById('arrow1');
-  if (a1 && a1.style.display !== 'none') a1.style.opacity = '0.25';
   document.getElementById('arrow2').style.opacity = '0.25';
   document.getElementById('result-section').classList.add('hidden');
-  document.getElementById('index-section').classList.add('hidden');
-  const r = document.getElementById('maint-custodian-row'); if (r) r.remove();
-  if (wfType==='nao') document.getElementById('product-buttons').innerHTML = '<span style="font-size:12px;color:#a0aec0;padding-top:8px;">Select relationship type first</span>';
+  document.getElementById('step3-label').textContent = 'Details';
+  document.getElementById('step3-content').innerHTML = hint('Select transaction type first');
+
+  var c = document.getElementById('step2-content');
+  c.innerHTML = '';
+  (naoProducts[rel] || []).forEach(function(prod){
+    var btn = document.createElement('button');
+    btn.className = 'btn-blue';
+    btn.textContent = prod.label;
+    btn.onclick = function(){ selectProduct(prod, btn); };
+    c.appendChild(btn);
+  });
 }
 
-// ─── FEEDBACK / NOTES ─────────────────────────────────────────────────────────
-window.__feedbackNotes = {};
+function selectProduct(prod, clickedBtn) {
+  var btns = document.querySelectorAll('#step2-content .btn-blue');
+  Array.prototype.forEach.call(btns, function(b){
+    b.className = 'btn-blue' + (b === clickedBtn ? ' active' : ' inactive');
+  });
+  document.getElementById('arrow2').style.opacity = '1';
+  document.getElementById('result-section').classList.add('hidden');
 
-function loadFeedback() {
-  try {
-    const saved = localStorage.getItem('c1s_feedback_notes');
-    if (saved) window.__feedbackNotes = JSON.parse(saved);
-  } catch(e) { window.__feedbackNotes = {}; }
-}
+  var step3 = document.getElementById('step3-content');
+  step3.innerHTML = '';
 
-function saveReviewerName() {
-  const name = document.getElementById('reviewer-name').value.trim();
-  try { localStorage.setItem('c1s_reviewer_name', name); } catch(e) {}
-}
-
-function saveNote(noteKey, workflowType, transactionType) {
-  const text = document.getElementById('note-input').value.trim();
-  if (!text) {
-    delete window.__feedbackNotes[noteKey];
-  } else {
-    window.__feedbackNotes[noteKey] = { workflowType, transactionType, text, savedAt: new Date().toISOString() };
-  }
-  try { localStorage.setItem('c1s_feedback_notes', JSON.stringify(window.__feedbackNotes)); } catch(e) {}
-  updateFeedbackCount();
-}
-
-function updateFeedbackCount() {
-  const count = Object.keys(window.__feedbackNotes).length;
-  const el = document.getElementById('feedback-count');
-  if (el) el.textContent = `${count} note${count === 1 ? '' : 's'} saved`;
-}
-
-function downloadFeedback() {
-  const reviewer = document.getElementById('reviewer-name').value.trim() || 'Unnamed Reviewer';
-  const notes = window.__feedbackNotes || {};
-  const keys = Object.keys(notes);
-
-  if (keys.length === 0) {
-    alert('No feedback notes have been entered yet. Type a note in the "Your Feedback" box for any workflow you want to flag, then come back to download.');
+  if (prod.question) {
+    // This transaction type needs one more answer before the workflow resolves.
+    document.getElementById('step3-label').textContent = prod.question.label;
+    state.question = prod.question;
+    state.product = null;
+    prod.question.options.forEach(function(o){
+      var btn = document.createElement('button');
+      btn.className = 'btn-idx';
+      btn.textContent = o.label;
+      btn.onclick = function(){ selectAnswer(o, btn); };
+      step3.appendChild(btn);
+    });
     return;
   }
 
-  let csv = 'Reviewer Name,Workflow Type,Transaction Type,Note,Saved At\n';
-  keys.forEach(k => {
-    const n = notes[k];
-    const esc = (s) => `"${String(s).replace(/"/g, '""')}"`;
-    csv += [esc(reviewer), esc(n.workflowType === 'nao' ? 'New Account Workflow' : 'Maintenance Workflow'), esc(n.transactionType), esc(n.text), esc(n.savedAt)].join(',') + '\n';
-  });
-
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  const dateStr = new Date().toISOString().split('T')[0];
-  a.href = url;
-  a.download = `CreativeOne_Wizard_Feedback_${reviewer.replace(/[^a-zA-Z0-9]/g,'_')}_${dateStr}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  document.getElementById('step3-label').textContent = 'Details';
+  state.question = null;
+  state.product = prod.id;
+  step3.innerHTML = ready('Result below \u2193');
+  renderResult();
 }
 
-window.addEventListener('DOMContentLoaded', loadFeedback);
+function selectAnswer(opt, clickedBtn) {
+  var btns = document.querySelectorAll('#step3-content .btn-idx');
+  Array.prototype.forEach.call(btns, function(b){
+    b.className = 'btn-idx' + (b === clickedBtn ? ' active' : '');
+  });
+  state.product = opt.wf;
+  renderResult();
+}
+
+// ─── MAINTENANCE: transaction type -> custodian (only when it matters) ────────
+function buildMaintTypeList() {
+  var c = document.getElementById('step1-content');
+  c.innerHTML = '';
+  var sel = document.createElement('select');
+  sel.className = 'maint-select';
+  var def = document.createElement('option');
+  def.value = '';
+  def.textContent = '-- Select transaction type --';
+  sel.appendChild(def);
+  maintTypes.slice().sort(function(a, b){
+    return a.label.localeCompare(b.label);
+  }).forEach(function(t){
+    var opt = document.createElement('option');
+    opt.value = t.label;
+    opt.textContent = t.label;
+    sel.appendChild(opt);
+  });
+  sel.onchange = function(){ selectMaintType(sel.value); };
+  c.appendChild(sel);
+}
+
+function selectMaintType(label) {
+  var entry = maintTypeByLabel(label);
+  state = { rel: null, custodian: null, product: null, entry: entry };
+  var step2 = document.getElementById('step2-content');
+  var step3 = document.getElementById('step3-content');
+  document.getElementById('result-section').classList.add('hidden');
+  step2.innerHTML = '';
+  step3.innerHTML = '';
+
+  if (!entry) {
+    document.getElementById('arrow1').style.opacity = '0.25';
+    document.getElementById('arrow2').style.opacity = '0.25';
+    step2.innerHTML = hint('Select transaction type first');
+    step3.innerHTML = hint('\u2014');
+    return;
+  }
+
+  document.getElementById('arrow1').style.opacity = '1';
+
+  if (needsCustodian(entry)) {
+    // Custodian changes the routing for this type, so ask for it.
+    document.getElementById('arrow2').style.opacity = '0.25';
+    [{ k:'pershing', l:'Pershing' }, { k:'other', l:'All Others' }].forEach(function(o){
+      var btn = document.createElement('button');
+      btn.className = 'btn-green';
+      btn.id = 'cust-' + o.k;
+      btn.textContent = o.l;
+      btn.onclick = function(){ selectCustodian(o.k); };
+      step2.appendChild(btn);
+    });
+    step3.innerHTML = hint('Select custodian first');
+  } else {
+    // Custodian-agnostic — skip the question entirely.
+    document.getElementById('arrow2').style.opacity = '1';
+    step2.innerHTML = hint('Not custodian-dependent');
+    step3.innerHTML = ready('Result below \u2193');
+    state.product = entry.wf;
+    renderResult();
+  }
+}
+
+function selectCustodian(cust) {
+  state.custodian = cust;
+  var btns = document.querySelectorAll('#step2-content .btn-green');
+  Array.prototype.forEach.call(btns, function(b){
+    b.className = 'btn-green' + (b.id === 'cust-' + cust ? ' active' : ' inactive');
+  });
+  var resolved = resolveMaint(state.entry, cust);
+  document.getElementById('arrow2').style.opacity = '1';
+  if (!resolved) {
+    document.getElementById('step3-content').innerHTML =
+      '<span style="font-size:12px;color:#c0392b;font-weight:600;padding-top:8px;display:inline-block;">'
+      + 'Not available for this custodian</span>';
+    document.getElementById('result-section').classList.add('hidden');
+    return;
+  }
+  document.getElementById('step3-content').innerHTML = ready('Result below \u2193');
+  state.product = resolved;
+  renderResult();
+}
+
+// ─── ROUTING ──────────────────────────────────────────────────────────────────
+// From any stage, the available transitions are the next stage plus any further
+// stages reachable by skipping consecutive optional stages. The chain stops at
+// the first required stage, which is always selectable.
+function exitsFor(stages, i) {
+  var out = [];
+  for (var j = i + 1; j < stages.length; j++) {
+    out.push(j);
+    if (!stages[j].optional) break;
+  }
+  return out;
+}
+
+function stageChip(s, extraClass) {
+  return '<button class="stage-btn ' + s.cls + (extraClass ? ' ' + extraClass : '') + '">'
+       + s.label + '</button>';
+}
+
+// ─── RENDER RESULT ────────────────────────────────────────────────────────────
+function chipRow(stages, idxs) {
+  var s = '<div class="stage-row">';
+  idxs.forEach(function(j, k){
+    if (k > 0) s += '<span class="stage-arrow">&rarr;</span>';
+    s += '<button class="stage-btn ' + stages[j].cls + '">' + stages[j].label + '</button>';
+  });
+  return s + '</div>';
+}
+
+function branchBox(stages, from, exits) {
+  var s = '<div class="branch-diagram">';
+  s += '<div class="branch-head">At ' + stages[from].label + ':</div>';
+  exits.forEach(function(j, k){
+    var label = k === 0 ? 'optional'
+              : (k === exits.length - 1 ? 'or directly' : 'or optional');
+    s += '<div class="branch-path">'
+      +    '<span class="branch-arrow-label">' + label + '</span>'
+      +    '<span class="stage-arrow">&rarr;</span>'
+      +    '<button class="stage-btn ' + stages[j].cls + '">' + stages[j].label + '</button>'
+      +    (k < exits.length - 1 ? '<span class="stage-arrow">&darr;</span>' : '')
+      +  '</div>';
+  });
+  return s + '</div>';
+}
+
+// Walks the stage list, emitting linear chip rows and an inline branch box at
+// each stage that has more than one available transition.
+function renderStagePath(stages) {
+  var html = '', run = [], i = 0, inBranch = false;
+  while (i < stages.length) {
+    var ex = exitsFor(stages, i);
+    if (ex.length > 1) {
+      if (!inBranch && run.indexOf(i) === -1) run.push(i);
+      if (run.length) { html += chipRow(stages, run); run = []; }
+      html += branchBox(stages, i, ex);
+      inBranch = true;
+      i++;
+      continue;
+    }
+    if (inBranch && stages[i].optional) { i++; continue; }
+    if (inBranch) inBranch = false;
+    run.push(i);
+    if (!ex.length) break;
+    i = ex[0];
+  }
+  if (run.length) html += chipRow(stages, run);
+  return html;
+}
+
+function renderResult() {
+  var wf = workflows[state.product];
+  if (!wf) return;
+  var section = document.getElementById('result-section');
+  section.classList.remove('hidden');
+
+  var assignHTML = '<table class="assign-table"><thead><tr><th>Stage</th><th>Assigned To</th><th></th></tr></thead><tbody>';
+  wf.assignments.forEach(function(a){
+    assignHTML += '<tr><td>' + a.stage + '</td>'
+      + '<td><span class="tag ' + a.tag + '">' + a.assigned + '</span></td>'
+      + '<td class="opt-cell">' + (a.optional ? 'Optional' : '') + '</td></tr>';
+  });
+  assignHTML += '</tbody></table>';
+
+  section.innerHTML =
+    '<div class="result-title">' + wf.name + '</div>'
+    + (wf.note ? '<div class="result-note">' + wf.note + '</div>' : '')
+    + '<div class="result-section-label">Stage Path</div>'
+    + renderStagePath(wf.stages)
+    + '<div class="result-section-label">Stage Assignments</div>'
+    + assignHTML;
+}
+
+// ─── RESET ────────────────────────────────────────────────────────────────────
+function resetWizard() {
+  state = { rel: null, custodian: null, product: null, entry: null, question: null };
+  document.getElementById('step3-label').textContent = 'Details';
+  document.getElementById('arrow1').style.opacity = '0.25';
+  document.getElementById('arrow2').style.opacity = '0.25';
+  document.getElementById('result-section').classList.add('hidden');
+
+  if (wfType === 'nao') {
+    setLabels('Relationship Type', 'Transaction Type', 'Details');
+    var c = document.getElementById('step1-content');
+    c.innerHTML = '';
+    [{ k:'brok', l:'Brokerage' }, { k:'adv', l:'Advisory' }].forEach(function(o){
+      var btn = document.createElement('button');
+      btn.className = 'btn-green';
+      btn.id = 'btn-' + o.k;
+      btn.textContent = o.l;
+      btn.onclick = function(){ selectRel(o.k); };
+      c.appendChild(btn);
+    });
+    document.getElementById('step2-content').innerHTML = hint('Select relationship type first');
+    document.getElementById('step3-content').innerHTML = hint('Select transaction type first');
+  } else {
+    setLabels('Transaction Type', 'Custodian', 'Details');
+    buildMaintTypeList();
+    document.getElementById('step2-content').innerHTML = hint('Select transaction type first');
+    document.getElementById('step3-content').innerHTML = hint('\u2014');
+  }
+}
+
+switchType('nao');
 </script>
 </body>
 </html>
