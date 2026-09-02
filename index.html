@@ -130,7 +130,7 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 // Maintenance stages, transaction types and assignments are taken verbatim from
 // the Creative One maintenance source spreadsheet. Assignee spellings
-// ("Prinicipals", "Operational Team") are preserved exactly as they appear there.
+// ("Principals", "Operational Team") are preserved exactly as they appear there.
 // ═══════════════════════════════════════════════════════════════════════════════
 
 let state = { rel: null, custodian: null, product: null };
@@ -140,29 +140,35 @@ const NOT_SPECIFIED = { assigned:'Not specified in source', tag:'tag-none' };
 
 // ─── MAINTENANCE STAGES (per source spreadsheet) ──────────────────────────────
 const M_ST   = { label:'Started',                         cls:'stage-started'    };
-const M_SIGS = { label:'Signatures',                       cls:'stage-sig'        };
-const M_BOR  = { label:'BO Review',                        cls:'stage-review'     };
-const M_APR  = { label:'Approval - Principal',             cls:'stage-approval'   };
-const M_ESC  = { label:'Approval - Principal Escalation',  cls:'stage-escalation', optional:true };
+const M_IR   = { label:'Initial Review',                   cls:'stage-initrev'    };
+const M_SIG  = { label:'For-Signature',                    cls:'stage-sig'        };
+const M_SGN  = { label:'Signed',                           cls:'stage-sig'        };
+const M_BOR  = { label:'Back Office Review',                cls:'stage-review'     };
+const M_APR  = { label:'Approval - Principal Review',       cls:'stage-approval'   };
+const M_ESC  = { label:'Approval - Principal Review Escalation', cls:'stage-escalation', optional:true };
 const M_FLD  = { label:'Field Processing',                 cls:'stage-field',      optional:true };
 const M_BOP  = { label:'Back Office Processing',           cls:'stage-processing' };
-const M_PFN  = { label:'Pre-Final',                        cls:'stage-prefinal'   };
+const M_PFN  = { label:'Pre-Final QA',                      cls:'stage-prefinal'   };
 const M_FIN  = { label:'Finalized',                        cls:'stage-final'      };
 
 const MAINT_ASSIGNMENTS = {
   'Started':                         NOT_SPECIFIED,
-  'Signatures':                      NOT_SPECIFIED,
-  'BO Review':                       { assigned:'Operational Team', tag:'tag-ops'   },
-  'Approval - Principal':            { assigned:'Prinicipals',      tag:'tag-bo'    },
-  'Approval - Principal Escalation': { assigned:'Prinicipals',      tag:'tag-bo'    },
+  'Initial Review':                  { assigned:'Auto-assigned (site)', tag:'tag-auto'  },
+  'For-Signature':                   { assigned:'WF Owner',             tag:'tag-owner' },
+  'Signed':                          { assigned:'WF Creator',           tag:'tag-owner' },
+  'Back Office Review':              { assigned:'Operational Team', tag:'tag-ops'   },
+  'Approval - Principal Review':     { assigned:'Principals',      tag:'tag-bo'    },
+  'Approval - Principal Review Escalation': { assigned:'Principals', tag:'tag-bo'  },
   'Field Processing':                { assigned:'Workflow Creator', tag:'tag-owner' },
   'Back Office Processing':          { assigned:'Operational Team', tag:'tag-ops'   },
-  'Pre-Final':                       { assigned:'Operational Team', tag:'tag-ops'   },
+  'Pre-Final QA':                    { assigned:'Operational Team', tag:'tag-ops'   },
 };
 
 // ─── NAO STAGES (per NAO source spreadsheet) ─────────────────────────────────
 const N_ST  = { label:'Started',                                cls:'stage-started'    };
-const N_SIG = { label:'Signatures',                             cls:'stage-sig'        };
+const N_IR  = { label:'Initial Review',                         cls:'stage-initrev'    };
+const N_SIG = { label:'For-Signature',                          cls:'stage-sig'        };
+const N_SGN = { label:'Signed',                                 cls:'stage-sig'        };
 const N_BOR = { label:'Back Office Review',                     cls:'stage-review'     };
 const N_APR = { label:'Approval - Principal Review',            cls:'stage-approval'   };
 const N_ESC = { label:'Approval - Principal Review Escalation', cls:'stage-escalation', optional:true };
@@ -172,11 +178,13 @@ const N_PFQ = { label:'Pre-Final QA',                           cls:'stage-prefi
 const N_FIN = { label:'Finalized',                              cls:'stage-final'      };
 
 const NAO_ASSIGNMENTS = {
-  'Started':                                { assigned:'System Required',  tag:'tag-auto'  },
-  'Signatures':                             NOT_SPECIFIED,
+  'Started':                                NOT_SPECIFIED,
+  'Initial Review':                         { assigned:'Auto-assigned (site)', tag:'tag-auto'  },
+  'For-Signature':                          { assigned:'WF Owner',             tag:'tag-owner' },
+  'Signed':                                 { assigned:'WF Creator',           tag:'tag-owner' },
   'Back Office Review':                     { assigned:'Operational Team', tag:'tag-ops'   },
-  'Approval - Principal Review':            { assigned:'Prinicipals',      tag:'tag-bo'    },
-  'Approval - Principal Review Escalation': { assigned:'Prinicipals',      tag:'tag-bo'    },
+  'Approval - Principal Review':            { assigned:'Principals',      tag:'tag-bo'    },
+  'Approval - Principal Review Escalation': { assigned:'Principals',      tag:'tag-bo'    },
   'Field Processing':                       { assigned:'Workflow Creator', tag:'tag-owner' },
   'Back Office Processing':                 { assigned:'Operational Team', tag:'tag-ops'   },
   'Pre-Final QA':                           { assigned:'Operational Team', tag:'tag-ops'   },
@@ -192,18 +200,18 @@ function assignsFor(stages, map, overrides) {
 }
 
 // ─── MAINTENANCE STAGE PATHS ─────────────────────────────────────────────────
-const WF1_STAGES = [M_ST, M_SIGS, M_BOR, M_APR, M_ESC, M_FLD, M_BOP, M_PFN, M_FIN];
-const WF2_STAGES = [M_ST, M_SIGS, M_BOR, M_APR, M_ESC, M_FLD, M_BOP, M_PFN, M_FIN];
-const WF3_STAGES = [M_ST, M_BOR, M_APR, M_ESC, M_FIN];
-const WF5_STAGES = [M_ST, M_SIGS, M_BOR, M_APR, M_ESC, M_BOP, M_PFN, M_FIN];
+const WF1_STAGES = [M_ST, M_IR, M_SIG, M_SGN, M_BOR, M_APR, M_ESC, M_FLD, M_BOP, M_PFN, M_FIN];
+const WF2_STAGES = [M_ST, M_IR, M_SIG, M_SGN, M_BOR, M_APR, M_ESC, M_FLD, M_BOP, M_PFN, M_FIN];
+const WF3_STAGES = [M_ST, M_IR, M_BOR, M_APR, M_ESC, M_FIN];
+const WF5_STAGES = [M_ST, M_IR, M_SIG, M_SGN, M_BOR, M_APR, M_ESC, M_BOP, M_PFN, M_FIN];
 
 // ─── NAO STAGE PATHS (per NAO source spreadsheet) ────────────────────────────
-const NAO1_STAGES = [N_ST, N_SIG, N_BOR, N_APR, N_ESC, N_FLD, N_BOP, N_PFQ, N_FIN];
-const NAO2_STAGES = [N_ST, N_SIG, N_BOR, N_APR, N_ESC, N_BOP, N_PFQ, N_FIN];
-const NAO3_STAGES = [N_ST, N_SIG, N_BOR, N_APR, N_ESC, N_FLD, N_BOP, N_PFQ, N_FIN];
-const NAO4_STAGES = [N_ST, N_SIG, N_BOR, N_APR, N_ESC, N_BOP, N_FIN];
-const NAO5_STAGES = [N_ST, N_SIG, N_BOR, N_APR, N_ESC, N_BOP, N_FIN];
-const NAO6_STAGES = [N_ST, N_SIG, N_BOR, N_APR, N_ESC, N_FIN];
+const NAO1_STAGES = [N_ST, N_IR, N_SIG, N_SGN, N_BOR, N_APR, N_ESC, N_FLD, N_BOP, N_PFQ, N_FIN];
+const NAO2_STAGES = [N_ST, N_IR, N_SIG, N_SGN, N_BOR, N_APR, N_ESC, N_BOP, N_PFQ, N_FIN];
+const NAO3_STAGES = [N_ST, N_IR, N_SIG, N_SGN, N_BOR, N_APR, N_ESC, N_FLD, N_BOP, N_PFQ, N_FIN];
+const NAO4_STAGES = [N_ST, N_IR, N_SIG, N_SGN, N_BOR, N_APR, N_ESC, N_BOP, N_FIN];
+const NAO5_STAGES = [N_ST, N_IR, N_SIG, N_SGN, N_BOR, N_APR, N_ESC, N_BOP, N_FIN];
+const NAO6_STAGES = [N_ST, N_IR, N_SIG, N_SGN, N_BOR, N_APR, N_ESC, N_FIN];
 
 // ─── NAO PRODUCTS (per NAO source spreadsheet) ───────────────────────────────
 const naoProducts = {
@@ -323,7 +331,7 @@ const workflows = {
   'wf2': { name:'Maintenance Workflow 2 \u2014 Reporting &amp; Deliverables', stages:WF2_STAGES, kind:'maint',
            note:'Annual Review routes here when Pershing is the custodian. Field Processing is newly added for this workflow.' },
   'wf3': { name:'Maintenance Workflow 3 \u2014 Documentation', stages:WF3_STAGES, kind:'maint',
-           note:'No signatures required. No Field Processing, Back Office Processing or Pre-Final stages.' },
+           note:'No signature stages. No Field Processing, Back Office Processing or Pre-Final QA stages.' },
   'wf5': { name:'Maintenance Workflow 5 \u2014 General Maintenance (Pershing)', stages:WF5_STAGES, kind:'maint',
            note:'Pershing is the custodian. No Field Processing \u2014 processing goes straight to Back Office.' }
 };
